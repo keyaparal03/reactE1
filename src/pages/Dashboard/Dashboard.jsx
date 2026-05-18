@@ -154,7 +154,18 @@ const getRoleIcon = (role) => {
 
                       <div
                         key={player._id}
-                        className='player-card'
+                        className={
+
+                            myTeam.find(
+
+                                item => item._id === player._id
+
+                            )
+
+                                ? 'player-card selected-player'
+
+                                : 'player-card'
+                        }
                       >
 
                         <div className='player-icon'>
@@ -195,12 +206,31 @@ const getRoleIcon = (role) => {
                         </div>
 
                         <button
-                          onClick={() =>
-                            addPlayer(player)
-                          }
-                        >
 
-                          Add Player
+                            disabled={
+
+                            myTeam.find(
+
+                                item => item._id === player._id
+                            )
+                            }
+
+                            onClick={() =>
+                            addPlayer(player)
+                            }
+                            >
+
+                            {
+
+                            myTeam.find(
+
+                                item => item._id === player._id
+                            )
+
+                                ? 'Selected'
+
+                                : 'Add Player'
+                            }
 
                         </button>
 

@@ -1,42 +1,22 @@
 import { useFormik } from 'formik'
-
 import * as Yup from 'yup'
-
-import {
-
-  Link,
-  useNavigate
-
-} from 'react-router-dom'
-
-import {
-
-  toast
-
-} from 'react-toastify'
-
+import { Link, useNavigate } from 'react-router-dom'
+import { toast } from 'react-toastify'
 import API from '../../services/api'
-
 import './Register.css'
 
 function Register() {
 
-  const navigate = useNavigate()
+const navigate = useNavigate()
 
   const registerForm = useFormik({
 
     initialValues: {
-
       fullName: '',
-
       email: '',
-
       password: '',
-
       confirmPassword: '',
-
       teamName: '',
-
       budget: ''
     },
 
@@ -56,7 +36,7 @@ function Register() {
 
       password: Yup.string()
 
-        .min(6, 'Minimum 6 characters')
+        .min(8, 'Minimum 8 characters')
 
         .required('Password Required'),
 
@@ -111,216 +91,216 @@ function Register() {
         )
       }
     }
-  })
+})
 
-  return (
+return (
 
-    <div className='register-container'>
+  <div className='register-container'>
 
-      <div className='register-box'>
+    <div className='register-box'>
 
-        <h1>
-          DreamArena Register
-        </h1>
+      <h1>
+        DreamArena Register
+      </h1>
 
-        <form
-          onSubmit={
-            registerForm.handleSubmit
+      <form
+        onSubmit={
+          registerForm.handleSubmit
+        }
+      >
+
+        <input
+          type='text'
+          name='fullName'
+          placeholder='Full Name'
+          value={
+            registerForm.values.fullName
           }
-        >
-
-          <input
-            type='text'
-            name='fullName'
-            placeholder='Full Name'
-            value={
-              registerForm.values.fullName
-            }
-            onChange={
-              registerForm.handleChange
-            }
-          />
-
-          {
-
-            registerForm.touched.fullName &&
-
-            registerForm.errors.fullName && (
-
-              <p className='error'>
-
-                {
-                  registerForm.errors.fullName
-                }
-
-              </p>
-            )
+          onChange={
+            registerForm.handleChange
           }
+        />
 
-          <input
-            type='email'
-            name='email'
-            placeholder='Email'
-            value={
-              registerForm.values.email
-            }
-            onChange={
-              registerForm.handleChange
-            }
-          />
+        {
 
-          {
+          registerForm.touched.fullName &&
 
-            registerForm.touched.email &&
+          registerForm.errors.fullName && (
 
-            registerForm.errors.email && (
+            <p className='error'>
 
-              <p className='error'>
+              {
+                registerForm.errors.fullName
+              }
 
-                {
-                  registerForm.errors.email
-                }
+            </p>
+          )
+        }
 
-              </p>
-            )
+        <input
+          type='email'
+          name='email'
+          placeholder='Email'
+          value={
+            registerForm.values.email
           }
-
-          <input
-            type='password'
-            name='password'
-            placeholder='Password'
-            autoComplete='new-password'
-            value={
-              registerForm.values.password
-            }
-            onChange={
-              registerForm.handleChange
-            }
-          />
-
-          {
-
-            registerForm.touched.password &&
-
-            registerForm.errors.password && (
-
-              <p className='error'>
-
-                {
-                  registerForm.errors.password
-                }
-
-              </p>
-            )
+          onChange={
+            registerForm.handleChange
           }
+        />
 
-          <input
-            type='password'
-            name='confirmPassword'
-            placeholder='Confirm Password'
-            autoComplete='new-password'
-            value={
-              registerForm.values.confirmPassword
-            }
-            onChange={
-              registerForm.handleChange
-            }
-          />
+        {
 
-          {
+          registerForm.touched.email &&
 
-            registerForm.touched.confirmPassword &&
+          registerForm.errors.email && (
 
-            registerForm.errors.confirmPassword && (
+            <p className='error'>
 
-              <p className='error'>
+              {
+                registerForm.errors.email
+              }
 
-                {
-                  registerForm.errors.confirmPassword
-                }
+            </p>
+          )
+        }
 
-              </p>
-            )
+        <input
+          type='password'
+          name='password'
+          placeholder='Password'
+          autoComplete='new-password'
+          value={
+            registerForm.values.password
           }
-
-          <input
-            type='text'
-            name='teamName'
-            placeholder='Team Name'
-            value={
-              registerForm.values.teamName
-            }
-            onChange={
-              registerForm.handleChange
-            }
-          />
-
-          {
-
-            registerForm.touched.teamName &&
-
-            registerForm.errors.teamName && (
-
-              <p className='error'>
-
-                {
-                  registerForm.errors.teamName
-                }
-
-              </p>
-            )
+          onChange={
+            registerForm.handleChange
           }
+        />
 
-          <input
-            type='number'
-            name='budget'
-            placeholder='Budget'
-            value={
-              registerForm.values.budget
-            }
-            onChange={
-              registerForm.handleChange
-            }
-          />
+        {
 
-          {
+          registerForm.touched.password &&
 
-            registerForm.touched.budget &&
+          registerForm.errors.password && (
 
-            registerForm.errors.budget && (
+            <p className='error'>
 
-              <p className='error'>
+              {
+                registerForm.errors.password
+              }
 
-                {
-                  registerForm.errors.budget
-                }
+            </p>
+          )
+        }
 
-              </p>
-            )
+        <input
+          type='password'
+          name='confirmPassword'
+          placeholder='Confirm Password'
+          autoComplete='new-password'
+          value={
+            registerForm.values.confirmPassword
           }
+          onChange={
+            registerForm.handleChange
+          }
+        />
 
-          <button type='submit'>
+        {
 
-            Register
+          registerForm.touched.confirmPassword &&
 
-          </button>
+          registerForm.errors.confirmPassword && (
 
-        </form>
+            <p className='error'>
 
-        <div className='login-link'>
+              {
+                registerForm.errors.confirmPassword
+              }
 
-          <Link to='/'>
+            </p>
+          )
+        }
 
-            Already Have Account?
+        <input
+          type='text'
+          name='teamName'
+          placeholder='Team Name'
+          value={
+            registerForm.values.teamName
+          }
+          onChange={
+            registerForm.handleChange
+          }
+        />
 
-          </Link>
+        {
 
-        </div>
+          registerForm.touched.teamName &&
+
+          registerForm.errors.teamName && (
+
+            <p className='error'>
+
+              {
+                registerForm.errors.teamName
+              }
+
+            </p>
+          )
+        }
+
+        <input
+          type='number'
+          name='budget'
+          placeholder='Budget'
+          value={
+            registerForm.values.budget
+          }
+          onChange={
+            registerForm.handleChange
+          }
+        />
+
+        {
+
+          registerForm.touched.budget &&
+
+          registerForm.errors.budget && (
+
+            <p className='error'>
+
+              {
+                registerForm.errors.budget
+              }
+
+            </p>
+          )
+        }
+
+        <button type='submit'>
+
+          Register
+
+        </button>
+
+      </form>
+
+      <div className='login-link'>
+
+        <Link to='/'>
+
+          Already Have Account?
+
+        </Link>
 
       </div>
 
     </div>
-  )
+
+  </div>
+)
 }
 
 export default Register

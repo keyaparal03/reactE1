@@ -13,7 +13,7 @@
   background:#f3f4f6;
 }
 
-.player-icon{
+/* .player-icon{
 
   height:70px;
 
@@ -28,12 +28,12 @@
   color:white;
 
   font-size:32px;
-}
+} */
 /* LEFT */
 
 .available-section{
 
-  flex:3;
+  flex:2;
 
   background:white;
 
@@ -98,9 +98,9 @@
 .player-card,
 .team-card{
 
-  width:210px;
+  width:200px;
 
-  min-height:320px;
+  min-height:250px;
 
   display:flex;
 
@@ -135,7 +135,7 @@
 
 .player-icon{
 
-  height:160px;
+  height:80px;
 
   display:flex;
 
@@ -240,4 +240,20 @@
   color:#6b7280;
 
   font-size:15px;
+}
+
+.selected-player{
+
+  opacity:0.5;
+
+  filter:blur(1px);
+
+  pointer-events:none;
+
+  transform:none !important;
+}
+
+.selected-player button{
+
+  background:#6b7280;
 }

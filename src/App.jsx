@@ -1,20 +1,23 @@
 import {
-  BrowserRouter,
   Routes,
   Route
 } from 'react-router-dom'
 
-import Login from './pages/Login'
-import Register from './pages/Register'
-import Dashboard from './pages/Dashboard'
-import PlayerDetails from './pages/PlayerDetails'
-import NotFound from './pages/NotFound'
+import Login from './pages/Login/Login'
+import Register from './pages/Register/Register'
+import Dashboard from './pages/Dashboard/Dashboard'
+import PlayerDetails from './pages/PlayerDetails/PlayerDetails'
+import NotFound from './pages/NotFound/NotFound'
+
+import Footer from './components/Footer/Footer'
+
+import ProtectedRoute from './routes/ProtectedRoute'
 
 function App() {
 
   return (
 
-    <BrowserRouter>
+    <>
 
       <Routes>
 
@@ -30,12 +33,26 @@ function App() {
 
         <Route
           path='/dashboard'
-          element={<Dashboard />}
+          element={
+
+            <ProtectedRoute>
+
+              <Dashboard />
+
+            </ProtectedRoute>
+          }
         />
 
         <Route
           path='/player/:id'
-          element={<PlayerDetails />}
+          element={
+
+            <ProtectedRoute>
+
+              <PlayerDetails />
+
+            </ProtectedRoute>
+          }
         />
 
         <Route
@@ -45,7 +62,9 @@ function App() {
 
       </Routes>
 
-    </BrowserRouter>
+      <Footer />
+
+    </>
   )
 }
 

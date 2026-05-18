@@ -1,0 +1,140 @@
+.player-grid,
+.team-grid{
+
+  display:flex;
+
+  flex-wrap:wrap;
+
+  gap:12px;
+}
+
+/* CARD */
+
+.player-card,
+.team-card{
+
+  width:150px;
+
+  min-height:180px;
+
+  display:flex;
+
+  flex-direction:column;
+
+  justify-content:space-between;
+
+  background:white;
+
+  border-radius:14px;
+
+  overflow:hidden;
+
+  border:1px solid #e5e7eb;
+
+  box-shadow:
+  0 2px 8px rgba(0,0,0,0.08);
+
+  transition:0.3s;
+}
+
+.player-card:hover,
+.team-card:hover{
+
+  transform:translateY(-3px);
+}
+
+/* ICON */
+
+.player-icon{
+
+  height:70px;
+
+  display:flex;
+
+  justify-content:center;
+
+  align-items:center;
+
+  background:#111827;
+
+  color:white;
+
+  font-size:32px;
+}
+
+/* ALL ROUNDER */
+
+.all-rounder-icon{
+
+  display:flex;
+
+  gap:5px;
+
+  font-size:24px;
+}
+
+/* INFO */
+
+.player-info{
+
+  padding:10px;
+
+  flex:1;
+}
+
+.player-info h4{
+
+  font-size:14px;
+
+  margin-bottom:4px;
+
+  color:#111827;
+}
+
+.player-info p{
+
+  margin:2px 0;
+
+  font-size:12px;
+
+  color:#6b7280;
+}
+
+/* PRICE */
+
+.price{
+
+  font-size:13px;
+
+  font-weight:bold;
+
+  color:#dc2626;
+}
+
+/* BUTTON */
+
+.player-card button,
+.team-card button{
+
+  width:100%;
+
+  padding:8px;
+
+  border:none;
+
+  background:#ef2323;
+
+  color:white;
+
+  font-size:12px;
+
+  font-weight:bold;
+
+  cursor:pointer;
+}
+
+.player-card button:hover,
+.team-card button:hover{
+
+  background:#d91c1c;
+}

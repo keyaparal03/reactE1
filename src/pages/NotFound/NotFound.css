@@ -1,0 +1,73 @@
+.notfound-container{
+
+  min-height:100vh;
+
+  display:flex;
+
+  justify-content:center;
+
+  align-items:center;
+
+  background:#f3f4f6;
+
+  padding:20px;
+}
+
+.notfound-box{
+
+  text-align:center;
+
+  background:white;
+
+  padding:50px;
+
+  border-radius:14px;
+
+  box-shadow:
+  0 4px 12px rgba(0,0,0,0.1);
+}
+
+.notfound-box h1{
+
+  font-size:90px;
+
+  color:#dc2626;
+
+  margin-bottom:10px;
+}
+
+.notfound-box h2{
+
+  margin-bottom:15px;
+
+  color:#111827;
+}
+
+.notfound-box p{
+
+  color:#6b7280;
+
+  margin-bottom:25px;
+}
+
+.notfound-box a{
+
+  display:inline-block;
+
+  padding:12px 20px;
+
+  background:#dc2626;
+
+  color:white;
+
+  border-radius:8px;
+
+  font-weight:bold;
+
+  transition:0.3s;
+}
+
+.notfound-box a:hover{
+
+  background:#b91c1c;
+}

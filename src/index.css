@@ -13,3 +13,12 @@ a{
 button{
   cursor:pointer;
 }
+.Toastify__toast-container{
+
+  z-index:999999 !important;
+}
+
+.Toastify__toast{
+
+  font-size:16px;
+}

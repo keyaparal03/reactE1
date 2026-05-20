@@ -1,133 +1,167 @@
 import {
 
-  useParams,
-  useNavigate
+  useEffect,
+  useState
 
-} from 'react-router-dom'
+} from 'react'
 
 import {
 
-  usePlayerContext
+  useParams,
+  Link
 
-} from '../../context/PlayerContext'
+} from 'react-router-dom'
+
+import API from '../../services/api'
 
 import Header from '../../components/Header/Header'
 
 import {
 
-  useAuthContext
+  GiCricketBat,
+  GiBaseballGlove,
+  GiTennisBall
 
-} from '../../context/AuthContext'
+} from 'react-icons/gi'
 
 import './PlayerDetails.css'
 
 function PlayerDetails() {
 
-  const { id } = useParams()
-
-  const navigate = useNavigate()
-
   const {
 
-    players
+    id
 
-  } = usePlayerContext()
+  } = useParams()
 
-  const {
+  const [player, setPlayer] = useState(null)
+    useEffect(() => {
 
-    user
+    const fetchPlayer = async () => {
 
-  } = useAuthContext()
+    try {
 
-  const player = players.find(
+        const response = await API.get(
 
-    item => item._id === id
-  )
+        `/players/${id}`
+        )
 
-  const totalSpent = 0
+        setPlayer(
+        response.data
+        )
 
-  const remainingBudget =
+    } catch (error) {
 
-    Number(user?.budget || 0) -
+        console.log(error)
+    }
+    }
 
-    totalSpent
+    fetchPlayer()
+
+    }, [id])
+
+ 
+
+  const getRoleIcon = (role) => {
+
+    switch(role){
+
+      case 'Batter':
+
+        return <GiCricketBat />
+
+      case 'Bowler':
+
+        return <GiTennisBall />
+
+      case 'Wicket Keeper':
+
+        return <GiBaseballGlove />
+
+      case 'All Rounder':
+
+        return (
+
+          <div className='all-rounder-icon'>
+
+            <GiCricketBat />
+
+            <GiTennisBall />
+
+          </div>
+        )
+
+      default:
+
+        return <GiCricketBat />
+    }
+  }
 
   if (!player) {
 
-    return (
-
-      <>
-
-        <Header
-          remainingBudget={
-            remainingBudget
-          }
-        />
-
-        <div className='player-details-container'>
-
-          <h1>
-            Player Not Found
-          </h1>
-
-        </div>
-
-      </>
-    )
+    return <h1>Loading...</h1>
   }
 
   return (
 
     <>
 
-      <Header
-        remainingBudget={
-          remainingBudget
-        }
-      />
+      <Header remainingBudget={0} />
 
-      <div className='player-details-container'>
+      <div className='player-details-page'>
 
         <div className='player-details-card'>
 
-          <img
-            src={player.image}
-            alt={player.name}
-          />
+          {/* ICON */}
 
-          <div className='player-content'>
+          <div className='details-icon'>
 
-            <h1>
+            {
 
-              {player.name}
+              getRoleIcon(
+                player.role
+              )
+            }
 
-            </h1>
+          </div>
 
-            <p>
+          {/* DETAILS */}
 
-              <strong>
-                Role:
-              </strong>
+          <h1>
 
-              {player.role}
+            {player.name}
 
-            </p>
+          </h1>
 
-            <p>
+          <p>
 
-              <strong>
-                Country:
-              </strong>
+            Country:
+
+            <span>
 
               {player.country}
 
-            </p>
+            </span>
 
-            <p>
+          </p>
 
-              <strong>
-                Price:
-              </strong>
+          <p>
+
+            Role:
+
+            <span>
+
+              {player.role}
+
+            </span>
+
+          </p>
+
+          <p>
+
+            Price:
+
+            <span>
 
               ₹ {
 
@@ -135,24 +169,64 @@ function PlayerDetails() {
                   player.price /
 
                   10000000
-
                 ).toFixed(2)
 
               } Cr
 
-            </p>
+            </span>
 
-            <button
-              onClick={() =>
-                navigate(-1)
+          </p>
+
+          <p>
+
+            Status:
+
+            <span>
+
+              {
+
+                player.sold
+
+                  ? 'Sold'
+
+                  : 'Available'
               }
-            >
 
-              Go Back
+            </span>
 
-            </button>
+          </p>
 
-          </div>
+          {
+
+            player.sold && (
+
+              <p>
+
+                Team:
+
+                <span>
+
+                  {
+
+                    player.soldTeamName
+                  }
+
+                </span>
+
+              </p>
+            )
+          }
+
+          {/* BACK */}
+
+          <Link
+            to='/dashboard'
+            className='back-btn'
+          >
+
+            Back To Dashboard
+
+          </Link>
 
         </div>
 

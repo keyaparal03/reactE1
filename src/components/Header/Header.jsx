@@ -12,20 +12,25 @@ import {
 
 import './Header.css'
 
-function Header({ remainingBudget }) {
+function Header({
+
+  remainingBudget
+}) {
 
   const navigate = useNavigate()
 
   const {
 
     user,
-    logoutUser
+    logout
 
   } = useAuthContext()
 
+  // LOGOUT
+
   const handleLogout = () => {
 
-    logoutUser()
+    logout()
 
     navigate('/')
   }
@@ -34,49 +39,57 @@ function Header({ remainingBudget }) {
 
     <header className='header'>
 
+      {/* LOGO */}
+
       <h1 className='logo'>
 
         DreamArena
 
       </h1>
 
-      <div className='header-center'>
+      {/* BUDGET */}
 
-        <h3>
+      <div className='budget-box'>
 
-          Welcome,
+        Budget Left:
 
-          <span>
+        ₹ {
 
-            {user?.fullName}
+          (
+            remainingBudget /
 
-          </span>
+            10000000
+          ).toFixed(2)
 
-        </h3>
-
-        <div className='budget-box'>
-
-          Available Balance:
-
-          ₹ {
-
-            remainingBudget.toLocaleString()
-          }
-
-        </div>
+        } Cr
 
       </div>
 
-      <button
+      {/* RIGHT SECTION */}
 
-        className='logout-btn'
+      <div className='header-right'>
 
-        onClick={handleLogout}
-      >
+        <h3 className='team-name'>
 
-        Logout
+          {
 
-      </button>
+            user?.teamName
+          }
+
+        </h3>
+
+        <button
+
+          onClick={handleLogout}
+
+          className='logout-btn'
+        >
+
+          Logout
+
+        </button>
+
+      </div>
 
     </header>
   )

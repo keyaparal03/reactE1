@@ -7,23 +7,24 @@ import {
 
 import {
 
-  useParams
+  useParams,
+  useNavigate
 
 } from 'react-router-dom'
 
 import API from '../../services/api'
 
+import Header from '../../components/Header/Header'
+
 import './PlayerDetails.css'
 
 function PlayerDetails() {
 
-  const {
+  const { id } = useParams()
 
-    id
+  const navigate = useNavigate()
 
-  } = useParams()
-
-  const [player, setPlayer] = useState(null)
+  const [player,setPlayer] = useState(null)
 
   useEffect(() => {
 
@@ -36,9 +37,7 @@ function PlayerDetails() {
           `/players/${id}`
         )
 
-        setPlayer(
-          response.data
-        )
+        setPlayer(response.data)
 
       } catch(error){
 
@@ -52,124 +51,278 @@ function PlayerDetails() {
 
   if(!player){
 
-    return <h2>Loading...</h2>
+    return (
+
+      <>
+        <Header />
+
+        <div className='details-container'>
+
+          <h2 className='loading-text'>
+
+            Loading...
+
+          </h2>
+
+        </div>
+      </>
+    )
   }
 
   return (
 
-    <div className='details-container'>
+    <>
 
-      <div className='details-card'>
+      <Header />
 
-        <h1>
+      <div className='details-container'>
 
-          {player.name}
+        <div className='player-details-card'>
 
-        </h1>
+          {/* IMAGE */}
 
-        <p>
+          <div className='player-image-section'>
 
-          <strong>
+            <img
 
-            Role:
+              src={
 
-          </strong>
+                player.image ||
 
-          {player.role}
+                'https://via.placeholder.com/350'
+              }
 
-        </p>
+              alt={player.name}
 
-        <p>
+              className='details-player-image'
+            />
 
-          <strong>
+          </div>
 
-            Player Type:
+          {/* CONTENT */}
 
-          </strong>
+          <div className='player-content'>
 
-          {player.playerType}
+            <h1>
 
-        </p>
+              {player.name}
 
-        <p>
+            </h1>
 
-          <strong>
+            <p className='player-country'>
 
-            Overall Rating:
+              {player.country}
 
-          </strong>
+            </p>
 
-          ⭐ {player.overallRating}
+            {/* ROLE */}
 
-        </p>
+            <div className='player-role'>
 
-        <p>
+              {player.playerType}
 
-          <strong>
+            </div>
 
-            Category:
+            {/* RATING */}
 
-          </strong>
+            <div className='player-rating-row'>
 
-          {player.category}
+              <span className='rating'>
 
-        </p>
+                ⭐ {
 
-        <p>
+                  player.overallRating ||
 
-          <strong>
+                  0
+                }
 
-            Country:
+              </span>
 
-          </strong>
+              <span className='category'>
 
-          {player.country}
+                {
 
-        </p>
+                  player.category ||
 
-        <p>
+                  'Capped'
+                }
 
-          <strong>
+              </span>
 
-            Base Price:
+            </div>
 
-          </strong>
+            {/* PRICE */}
 
-          ₹ {
+            <h2 className='player-price'>
 
-            (
-              player.basePrice /
+              ₹ {
 
-              10000000
-            ).toFixed(2)
+                player.price
 
-          } Cr
+                  ?
 
-        </p>
+                  (
+                    player.price /
 
-        <p>
+                    10000000
+                  ).toFixed(2)
 
-          <strong>
+                  :
 
-            Auction Price:
+                  '0.00'
 
-          </strong>
+              } Cr
 
-          ₹ {
+            </h2>
 
-            (
-              player.price /
+            {/* DETAILS */}
 
-              10000000
-            ).toFixed(2)
+            <div className='details-grid'>
 
-          } Cr
+              <div className='details-box'>
 
-        </p>
+                <span>
+
+                  Role
+
+                </span>
+
+                <h3>
+
+                  {player.role}
+
+                </h3>
+
+              </div>
+
+              <div className='details-box'>
+
+                <span>
+
+                  Base Price
+
+                </span>
+
+                <h3>
+
+                  ₹ {
+
+                    player.basePrice
+
+                      ?
+
+                      (
+                        player.basePrice /
+
+                        10000000
+                      ).toFixed(2)
+
+                      :
+
+                      '0.00'
+
+                  } Cr
+
+                </h3>
+
+              </div>
+
+              <div className='details-box'>
+
+                <span>
+
+                  Team Type
+
+                </span>
+
+                <h3>
+
+                  {
+
+                    player.category ||
+
+                    'Capped'
+                  }
+
+                </h3>
+
+              </div>
+
+              <div className='details-box'>
+
+                <span>
+
+                  Country
+
+                </span>
+
+                <h3>
+
+                  {player.country}
+
+                </h3>
+
+              </div>
+
+            </div>
+
+            {/* ABOUT */}
+
+            <div className='about-player'>
+
+              <h3>
+
+                About Player
+
+              </h3>
+
+              <p>
+
+                {player.name}
+
+                is a talented
+
+                {player.playerType}
+
+                from
+
+                {player.country}.
+
+                With an impressive rating of
+
+                {player.overallRating},
+
+                this player is considered one of the
+                key match winners in DreamArena
+                Premier League auction.
+
+              </p>
+
+            </div>
+
+            {/* BUTTON */}
+
+            <button
+
+              className='dashboard-btn'
+
+              onClick={() =>
+
+                navigate('/dashboard')
+              }
+            >
+
+              ← Back To Dashboard
+
+            </button>
+
+          </div>
+
+        </div>
 
       </div>
 
-    </div>
+    </>
   )
 }
 

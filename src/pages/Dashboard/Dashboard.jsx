@@ -181,14 +181,20 @@ function Dashboard() {
 
                           {/* PLAYER IMAGE */}
 
-                          <img
+                         <img
 
-                            src={player.image}
+                          src={player.image}
 
-                            alt={player.name}
+                          alt={player.name}
 
-                            className='player-image'
-                          />
+                          className='player-image'
+
+                          onError={(e) => {
+
+                            e.target.src =
+                            'https://cdn-icons-png.flaticon.com/512/3135/3135715.png'
+                          }}
+                        />
 
                           {/* PLAYER INFO */}
 
@@ -368,14 +374,21 @@ function Dashboard() {
 
                       {/* IMAGE */}
 
-                      <img
+                       <img
 
-                        src={player.image}
+                          src={player.image}
 
-                        alt={player.name}
+                          alt={player.name}
 
-                        className='player-image'
-                      />
+                          className='player-image'
+
+                          onError={(e) => {
+
+                            e.target.src =
+                            'https://cdn-icons-png.flaticon.com/512/3135/3135715.png'
+                          }}
+                        />
+
 
                       {/* INFO */}
 

@@ -18,14 +18,6 @@ import {
 
 } from 'react-router-dom'
 
-import {
-
-  GiCricketBat,
-  GiBaseballGlove,
-  GiTennisBall
-
-} from 'react-icons/gi'
-
 import './Dashboard.css'
 
 function Dashboard() {
@@ -34,7 +26,6 @@ function Dashboard() {
 
     players,
     myTeam,
-
     addPlayer,
     removePlayer
 
@@ -50,7 +41,7 @@ function Dashboard() {
 
   const totalSpent = myTeam.reduce(
 
-    (total, item) =>
+    (total,item) =>
 
       total + item.price,
 
@@ -67,61 +58,32 @@ function Dashboard() {
 
     totalSpent
 
-  // ROLE ICONS
-
-  const getRoleIcon = (role) => {
-
-    switch(role){
-
-      case 'Batter':
-
-        return <GiCricketBat />
-
-      case 'Bowler':
-
-        return <GiTennisBall />
-
-      case 'Wicket Keeper':
-
-        return <GiBaseballGlove />
-
-      case 'All Rounder':
-
-        return (
-
-          <div className='all-rounder-icon'>
-
-            <GiCricketBat />
-
-            <GiTennisBall />
-
-          </div>
-        )
-
-      default:
-
-        return <GiCricketBat />
-    }
-  }
-
   // GROUP PLAYERS
 
   const groupedPlayers = {
 
-    Batter: players.filter(
+    Batter:players.filter(
+
       player => player.role === 'Batter'
     ),
 
-    Bowler: players.filter(
+    Bowler:players.filter(
+
       player => player.role === 'Bowler'
     ),
 
-    'Wicket Keeper': players.filter(
-      player => player.role === 'Wicket Keeper'
+    'Wicket Keeper':players.filter(
+
+      player =>
+
+        player.role === 'Wicket Keeper'
     ),
 
-    'All Rounder': players.filter(
-      player => player.role === 'All Rounder'
+    'All Rounder':players.filter(
+
+      player =>
+
+        player.role === 'All Rounder'
     )
   }
 
@@ -130,6 +92,7 @@ function Dashboard() {
     <>
 
       <Header
+
         remainingBudget={
           remainingBudget
         }
@@ -141,15 +104,23 @@ function Dashboard() {
 
         <div className='available-section'>
 
-          <h1 className='section-title'>
+          <div className='panel-header'>
 
-            IPL Auction Players
+            <h1 className='section-title'>
 
-          </h1>
+              Available Players
+
+            </h1>
+
+          </div>
 
           {
 
-            Object.keys(groupedPlayers).map(role => (
+            Object.keys(
+
+              groupedPlayers
+
+            ).map(role => (
 
               <div key={role}>
 
@@ -208,18 +179,16 @@ function Dashboard() {
                           }
                         >
 
-                          {/* ICON */}
+                          {/* PLAYER IMAGE */}
 
-                          <div className='player-icon'>
+                          <img
 
-                            {
+                            src={player.image}
 
-                              getRoleIcon(
-                                player.role
-                              )
-                            }
+                            alt={player.name}
 
-                          </div>
+                            className='player-image'
+                          />
 
                           {/* PLAYER INFO */}
 
@@ -242,26 +211,26 @@ function Dashboard() {
 
                             </p>
 
-                            {/* PLAYER TYPE */}
-
                             <p className='player-type'>
 
                               {player.playerType}
 
                             </p>
 
-                            {/* RATING + CATEGORY */}
+                            {/* META */}
 
                             <div className='player-meta'>
 
                               <span className='rating'>
 
                                 ⭐ {player.overallRating}
+
                               </span>
 
                               <span className='category'>
 
                                 {player.category}
+
                               </span>
 
                             </div>
@@ -282,7 +251,7 @@ function Dashboard() {
 
                             </p>
 
-                            {/* SOLD TEAM */}
+                            {/* SOLD INFO */}
 
                             {
 
@@ -327,6 +296,7 @@ function Dashboard() {
                             }
 
                             onClick={() =>
+
                               addPlayer(player)
                             }
                           >
@@ -359,11 +329,17 @@ function Dashboard() {
 
         <div className='team-section'>
 
-          <h1 className='section-title'>
+          <div className='panel-header'>
 
-            My Squad ({myTeam.length}/15)
+            <h1 className='section-title'>
 
-          </h1>
+              My Squad
+
+              ({myTeam.length}/15)
+
+            </h1>
+
+          </div>
 
           {
 
@@ -390,18 +366,16 @@ function Dashboard() {
                       className='team-card'
                     >
 
-                      {/* ICON */}
+                      {/* IMAGE */}
 
-                      <div className='player-icon'>
+                      <img
 
-                        {
+                        src={player.image}
 
-                          getRoleIcon(
-                            player.role
-                          )
-                        }
+                        alt={player.name}
 
-                      </div>
+                        className='player-image'
+                      />
 
                       {/* INFO */}
 
@@ -429,11 +403,13 @@ function Dashboard() {
                           <span className='rating'>
 
                             ⭐ {player.overallRating}
+
                           </span>
 
                           <span className='category'>
 
                             {player.category}
+
                           </span>
 
                         </div>
@@ -459,6 +435,7 @@ function Dashboard() {
                       <button
 
                         onClick={() =>
+
                           removePlayer(player._id)
                         }
                       >

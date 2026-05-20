@@ -32,24 +32,19 @@ function App() {
 
   // HIDE FOOTER
 
-  const hideFooterRoutes = [
+  const hideFooter =
 
-    '/login',
-    '/register'
-  ]
+    location.pathname === '/login' ||
 
-  const shouldHideFooter =
+    location.pathname === '/register' ||
 
-    hideFooterRoutes.includes(
-
-      location.pathname
-    )
+    location.pathname.includes('/player/')
 
   return (
 
     <ErrorBoundary>
 
-      <>
+      <div className='app-container'>
 
         <Routes>
 
@@ -116,7 +111,7 @@ function App() {
             }
           />
 
-          {/* 404 */}
+          {/* NOT FOUND */}
 
           <Route
             path='*'
@@ -127,12 +122,12 @@ function App() {
 
         {
 
-          !shouldHideFooter &&
+          !hideFooter &&
 
           <Footer />
         }
 
-      </>
+      </div>
 
     </ErrorBoundary>
   )

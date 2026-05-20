@@ -143,7 +143,7 @@ function Dashboard() {
 
           <h1 className='section-title'>
 
-            Available Players
+            IPL Auction Players
 
           </h1>
 
@@ -236,11 +236,37 @@ function Dashboard() {
 
                             </Link>
 
-                            <p>
+                            <p className='player-country'>
 
                               {player.country}
 
                             </p>
+
+                            {/* PLAYER TYPE */}
+
+                            <p className='player-type'>
+
+                              {player.playerType}
+
+                            </p>
+
+                            {/* RATING + CATEGORY */}
+
+                            <div className='player-meta'>
+
+                              <span className='rating'>
+
+                                ⭐ {player.overallRating}
+                              </span>
+
+                              <span className='category'>
+
+                                {player.category}
+                              </span>
+
+                            </div>
+
+                            {/* PRICE */}
 
                             <p className='price'>
 
@@ -311,7 +337,7 @@ function Dashboard() {
 
                                 ? 'Sold'
 
-                                : 'Add Player'
+                                : 'Buy Player'
                             }
 
                           </button>
@@ -335,7 +361,7 @@ function Dashboard() {
 
           <h1 className='section-title'>
 
-            My Team ({myTeam.length}/15)
+            My Squad ({myTeam.length}/15)
 
           </h1>
 
@@ -345,7 +371,7 @@ function Dashboard() {
 
               <p className='empty-team'>
 
-                No Players Added
+                No Players Purchased
 
               </p>
 
@@ -392,11 +418,25 @@ function Dashboard() {
 
                         </Link>
 
-                        <p>
+                        <p className='player-type'>
 
-                          {player.role}
+                          {player.playerType}
 
                         </p>
+
+                        <div className='player-meta'>
+
+                          <span className='rating'>
+
+                            ⭐ {player.overallRating}
+                          </span>
+
+                          <span className='category'>
+
+                            {player.category}
+                          </span>
+
+                        </div>
 
                         <p className='price'>
 

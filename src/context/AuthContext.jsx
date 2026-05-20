@@ -1,5 +1,3 @@
-/* eslint-disable react-refresh/only-export-components */
-
 import {
 
   createContext,
@@ -11,74 +9,61 @@ import {
 
 const AuthContext = createContext()
 
-function AuthProvider({ children }) {
+const AuthProvider = ({ children }) => {
 
-  // LOAD USER FROM SESSION STORAGE
+  const [user,setUser] = useState(null)
 
-  const [user, setUser] = useState(() => {
-
-    const savedUser = sessionStorage.getItem(
-      'dreamArenaUser'
-    )
-
-    return savedUser
-
-      ? JSON.parse(savedUser)
-
-      : null
-  })
-
-  // SAVE USER TO SESSION STORAGE
+  // LOAD USER
 
   useEffect(() => {
 
-    if (user) {
+    const storedUser = localStorage.getItem(
 
-      sessionStorage.setItem(
+      'user'
+    )
 
-        'dreamArenaUser',
+    if(storedUser){
 
-        JSON.stringify(user)
-      )
+      setUser(
 
-    } else {
-
-      sessionStorage.removeItem(
-
-        'dreamArenaUser'
+        JSON.parse(storedUser)
       )
     }
 
-  }, [user])
+  }, [])
 
   // LOGIN
 
-  const login = (userData) => {
+  const loginUser = (userData) => {
+
+    localStorage.setItem(
+
+      'user',
+
+      JSON.stringify(userData)
+    )
 
     setUser(userData)
   }
 
   // LOGOUT
 
-  const logout = () => {
+  const logoutUser = () => {
+
+    localStorage.removeItem('user')
 
     setUser(null)
-
-    sessionStorage.removeItem(
-      'dreamArenaUser'
-    )
   }
 
   return (
 
     <AuthContext.Provider
+
       value={{
 
         user,
-
-        login,
-
-        logout
+        loginUser,
+        logoutUser
       }}
     >
 

@@ -7,22 +7,11 @@ import {
 
 import {
 
-  useParams,
-  Link
+  useParams
 
 } from 'react-router-dom'
 
 import API from '../../services/api'
-
-import Header from '../../components/Header/Header'
-
-import {
-
-  GiCricketBat,
-  GiBaseballGlove,
-  GiTennisBall
-
-} from 'react-icons/gi'
 
 import './PlayerDetails.css'
 
@@ -35,204 +24,152 @@ function PlayerDetails() {
   } = useParams()
 
   const [player, setPlayer] = useState(null)
-    useEffect(() => {
+
+  useEffect(() => {
 
     const fetchPlayer = async () => {
 
-    try {
+      try {
 
         const response = await API.get(
 
-        `/players/${id}`
+          `/players/${id}`
         )
 
         setPlayer(
-        response.data
+          response.data
         )
 
-    } catch (error) {
+      } catch(error){
 
         console.log(error)
-    }
+      }
     }
 
     fetchPlayer()
 
-    }, [id])
+  }, [id])
 
- 
+  if(!player){
 
-  const getRoleIcon = (role) => {
-
-    switch(role){
-
-      case 'Batter':
-
-        return <GiCricketBat />
-
-      case 'Bowler':
-
-        return <GiTennisBall />
-
-      case 'Wicket Keeper':
-
-        return <GiBaseballGlove />
-
-      case 'All Rounder':
-
-        return (
-
-          <div className='all-rounder-icon'>
-
-            <GiCricketBat />
-
-            <GiTennisBall />
-
-          </div>
-        )
-
-      default:
-
-        return <GiCricketBat />
-    }
-  }
-
-  if (!player) {
-
-    return <h1>Loading...</h1>
+    return <h2>Loading...</h2>
   }
 
   return (
 
-    <>
+    <div className='details-container'>
 
-      <Header remainingBudget={0} />
+      <div className='details-card'>
 
-      <div className='player-details-page'>
+        <h1>
 
-        <div className='player-details-card'>
+          {player.name}
 
-          {/* ICON */}
+        </h1>
 
-          <div className='details-icon'>
+        <p>
 
-            {
-
-              getRoleIcon(
-                player.role
-              )
-            }
-
-          </div>
-
-          {/* DETAILS */}
-
-          <h1>
-
-            {player.name}
-
-          </h1>
-
-          <p>
-
-            Country:
-
-            <span>
-
-              {player.country}
-
-            </span>
-
-          </p>
-
-          <p>
+          <strong>
 
             Role:
 
-            <span>
+          </strong>
 
-              {player.role}
+          {player.role}
 
-            </span>
+        </p>
 
-          </p>
+        <p>
 
-          <p>
+          <strong>
 
-            Price:
+            Player Type:
 
-            <span>
+          </strong>
 
-              ₹ {
+          {player.playerType}
 
-                (
-                  player.price /
+        </p>
 
-                  10000000
-                ).toFixed(2)
+        <p>
 
-              } Cr
+          <strong>
 
-            </span>
+            Overall Rating:
 
-          </p>
+          </strong>
 
-          <p>
+          ⭐ {player.overallRating}
 
-            Status:
+        </p>
 
-            <span>
+        <p>
 
-              {
+          <strong>
 
-                player.sold
+            Category:
 
-                  ? 'Sold'
+          </strong>
 
-                  : 'Available'
-              }
+          {player.category}
 
-            </span>
+        </p>
 
-          </p>
+        <p>
 
-          {
+          <strong>
 
-            player.sold && (
+            Country:
 
-              <p>
+          </strong>
 
-                Team:
+          {player.country}
 
-                <span>
+        </p>
 
-                  {
+        <p>
 
-                    player.soldTeamName
-                  }
+          <strong>
 
-                </span>
+            Base Price:
 
-              </p>
-            )
-          }
+          </strong>
 
-          {/* BACK */}
+          ₹ {
 
-          <Link
-            to='/dashboard'
-            className='back-btn'
-          >
+            (
+              player.basePrice /
 
-            Back To Dashboard
+              10000000
+            ).toFixed(2)
 
-          </Link>
+          } Cr
 
-        </div>
+        </p>
+
+        <p>
+
+          <strong>
+
+            Auction Price:
+
+          </strong>
+
+          ₹ {
+
+            (
+              player.price /
+
+              10000000
+            ).toFixed(2)
+
+          } Cr
+
+        </p>
 
       </div>
 
-    </>
+    </div>
   )
 }
 

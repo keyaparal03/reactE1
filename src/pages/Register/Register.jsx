@@ -208,7 +208,7 @@ function Register() {
           <input
             type='text'
             name='fullName'
-            placeholder='Manager Name'
+            placeholder='Full Name'
             value={
               registerForm.values.fullName
             }

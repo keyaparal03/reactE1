@@ -1,80 +1,139 @@
 import {
+
   Routes,
-  Route
+  Route,
+  useLocation
+
 } from 'react-router-dom'
 
 import Home from './pages/Home/Home'
+
 import Login from './pages/Login/Login'
+
 import Register from './pages/Register/Register'
+
 import Dashboard from './pages/Dashboard/Dashboard'
+
 import PlayerDetails from './pages/PlayerDetails/PlayerDetails'
+
 import NotFound from './pages/NotFound/NotFound'
-import ErrorBoundary from './components/ErrorBoundary/ErrorBoundary'
+
 import Footer from './components/Footer/Footer'
-import PublicRoute from './routes/PublicRoute'
+
 import ProtectedRoute from './routes/ProtectedRoute'
+
+import PublicRoute from './routes/PublicRoute'
+
+import ErrorBoundary from './components/ErrorBoundary/ErrorBoundary'
 
 function App() {
 
-  return (
-<ErrorBoundary>
-    <>
+  const location = useLocation()
 
-      <Routes>
+  // HIDE FOOTER
+
+  const hideFooterRoutes = [
+
+    '/login',
+    '/register'
+  ]
+
+  const shouldHideFooter =
+
+    hideFooterRoutes.includes(
+
+      location.pathname
+    )
+
+  return (
+
+    <ErrorBoundary>
+
+      <>
+
+        <Routes>
+
+          {/* HOME */}
+
           <Route
             path='/'
             element={<Home />}
           />
 
+          {/* LOGIN */}
 
-        <Route
-          path='/login'
-          element={
-            <PublicRoute>
-              <Login />
-            </PublicRoute>
-          }
-        />
+          <Route
+            path='/login'
+            element={
 
-        <Route
-          path='/register'
-          element={
-            <PublicRoute>
-              <Register />
-            </PublicRoute>
-          }
-        />
+              <PublicRoute>
 
-        <Route
-          path='/dashboard'
-          element={
+                <Login />
 
-            <ProtectedRoute>
-              <Dashboard />
-            </ProtectedRoute>
-          }
-        />
+              </PublicRoute>
+            }
+          />
 
-        <Route
-          path='/player/:id'
-          element={
+          {/* REGISTER */}
 
-            <ProtectedRoute>
-              <PlayerDetails />
-            </ProtectedRoute>
-          }
-        />
+          <Route
+            path='/register'
+            element={
 
-        <Route
-          path='*'
-          element={<NotFound />}
-        />
+              <PublicRoute>
 
-      </Routes>
+                <Register />
 
-      <Footer />
+              </PublicRoute>
+            }
+          />
 
-    </>
+          {/* DASHBOARD */}
+
+          <Route
+            path='/dashboard'
+            element={
+
+              <ProtectedRoute>
+
+                <Dashboard />
+
+              </ProtectedRoute>
+            }
+          />
+
+          {/* PLAYER DETAILS */}
+
+          <Route
+            path='/player/:id'
+            element={
+
+              <ProtectedRoute>
+
+                <PlayerDetails />
+
+              </ProtectedRoute>
+            }
+          />
+
+          {/* 404 */}
+
+          <Route
+            path='*'
+            element={<NotFound />}
+          />
+
+        </Routes>
+
+        {
+
+          !shouldHideFooter &&
+
+          <Footer />
+        }
+
+      </>
+
     </ErrorBoundary>
   )
 }

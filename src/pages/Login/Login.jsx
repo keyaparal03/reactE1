@@ -1,8 +1,4 @@
-import {
-
-  useFormik
-
-} from 'formik'
+import { useFormik } from 'formik'
 
 import * as Yup from 'yup'
 
@@ -41,7 +37,7 @@ function Login() {
 
   const loginForm = useFormik({
 
-    initialValues: {
+    initialValues:{
 
       email:'',
       password:''
@@ -51,18 +47,25 @@ function Login() {
 
       email:Yup.string()
 
+        .email(
+
+          'Please enter a valid email address.'
+        )
+
         .required(
+
           'Please enter your email.'
         ),
 
       password:Yup.string()
 
         .required(
+
           'Please enter your password.'
         )
     }),
 
-    onSubmit: async (values) => {
+    onSubmit:async (values) => {
 
       try {
 
@@ -73,19 +76,42 @@ function Login() {
           values
         )
 
+        // SAVE USER
+
         loginUser(
+
           response.data
         )
 
+        // LOCAL STORAGE
+
+        localStorage.setItem(
+
+          'user',
+
+          JSON.stringify(response.data)
+        )
+
+        // SUCCESS MESSAGE
+
         toast.success(
+
           'Login Successful'
         )
 
-        navigate('/dashboard')
+        // REDIRECT
 
-      } catch (error) {
-        console.log(error)
+        setTimeout(() => {
+
+          navigate('/dashboard')
+
+        },1000)
+
+      } catch(error){
+
         toast.error(
+
+          error.response?.data?.message ||
 
           'Incorrect email or password.'
         )
@@ -106,56 +132,96 @@ function Login() {
         </h1>
 
         <form
+
           onSubmit={
+
             loginForm.handleSubmit
           }
         >
 
           <input
+
             type='email'
+
             name='email'
+
             placeholder='Enter Email'
+
             value={
+
               loginForm.values.email
             }
+
             onChange={
+
               loginForm.handleChange
+            }
+
+            onBlur={
+
+              loginForm.handleBlur
             }
           />
 
-          <p className='error'>
+          {
 
-            {
+            loginForm.touched.email &&
 
-              loginForm.touched.email &&
+            loginForm.errors.email && (
 
-              loginForm.errors.email
-            }
+              <p className='error'>
 
-          </p>
+                {
+
+                  loginForm.errors.email
+                }
+
+              </p>
+            )
+          }
 
           <input
+
             type='password'
+
             name='password'
+
             placeholder='Enter Password'
+
+            autoComplete='current-password'
+
             value={
+
               loginForm.values.password
             }
+
             onChange={
+
               loginForm.handleChange
+            }
+
+            onBlur={
+
+              loginForm.handleBlur
             }
           />
 
-          <p className='error'>
+          {
 
-            {
+            loginForm.touched.password &&
 
-              loginForm.touched.password &&
+            loginForm.errors.password && (
 
-              loginForm.errors.password
-            }
+              <p className='error'>
 
-          </p>
+                {
+
+                  loginForm.errors.password
+                }
+
+              </p>
+            )
+          }
 
           <button type='submit'>
 
@@ -165,18 +231,20 @@ function Login() {
 
         </form>
 
-        <Link
-          to='/register'
-          className='register-link'
-        >
+        <div className='register-link'>
 
-          Create Account
+          <Link to='/register'>
 
-        </Link>
+            Create Account
+
+          </Link>
+
+        </div>
 
       </div>
 
     </div>
   )
 }
+
 export default Login

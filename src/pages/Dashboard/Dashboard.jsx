@@ -14,6 +14,12 @@ import {
 
 import {
 
+  Link
+
+} from 'react-router-dom'
+
+import {
+
   GiCricketBat,
   GiBaseballGlove,
   GiTennisBall
@@ -28,6 +34,7 @@ function Dashboard() {
 
     players,
     myTeam,
+
     addPlayer,
     removePlayer
 
@@ -39,6 +46,8 @@ function Dashboard() {
 
   } = useAuthContext()
 
+  // TOTAL SPENT
+
   const totalSpent = myTeam.reduce(
 
     (total, item) =>
@@ -48,48 +57,52 @@ function Dashboard() {
     0
   )
 
+  // REMAINING BUDGET
+
   const remainingBudget =
 
-    Number(user.budget) -
+    Number(user?.budget || 0)
+
+    -
 
     totalSpent
 
   // ROLE ICONS
 
-const getRoleIcon = (role) => {
+  const getRoleIcon = (role) => {
 
-  switch(role){
+    switch(role){
 
-    case 'Batter':
+      case 'Batter':
 
-      return <GiCricketBat />
+        return <GiCricketBat />
 
-    case 'Bowler':
+      case 'Bowler':
 
-      return <GiTennisBall />
+        return <GiTennisBall />
 
-    case 'Wicket Keeper':
+      case 'Wicket Keeper':
 
-      return <GiBaseballGlove />
+        return <GiBaseballGlove />
 
-    case 'All Rounder':
+      case 'All Rounder':
 
-      return (
+        return (
 
-        <div className='all-rounder-icon'>
+          <div className='all-rounder-icon'>
 
-          <GiCricketBat />
+            <GiCricketBat />
 
-          <GiTennisBall />
+            <GiTennisBall />
 
-        </div>
-      )
+          </div>
+        )
 
-    default:
+      default:
 
-      return <GiCricketBat />
+        return <GiCricketBat />
+    }
   }
-}
 
   // GROUP PLAYERS
 
@@ -124,7 +137,7 @@ const getRoleIcon = (role) => {
 
       <div className='dashboard-container'>
 
-        {/* LEFT */}
+        {/* LEFT SIDE */}
 
         <div className='available-section'>
 
@@ -150,92 +163,162 @@ const getRoleIcon = (role) => {
 
                   {
 
-                    groupedPlayers[role].map(player => (
+                    groupedPlayers[role].map(player => {
 
-                      <div
-                        key={player._id}
-                        className={
+                      // CURRENT USER PLAYER
 
-                            myTeam.find(
+                      const isCurrentUserPlayer =
 
-                                item => item._id === player._id
+                        myTeam.some(
 
-                            )
+                          item =>
 
-                                ? 'player-card selected-player'
+                            String(item._id)
 
-                                : 'player-card'
-                        }
-                      >
+                            ===
 
-                        <div className='player-icon'>
+                            String(player._id)
+                        )
 
-                          {getRoleIcon(player.role)}
+                      // SOLD TO OTHER USER
 
-                        </div>
+                      const isSoldToOtherUser =
 
-                        <div className='player-info'>
+                        player.sold &&
 
-                          <h4>
+                        String(player.soldTo)
 
-                            {player.name}
+                        !==
 
-                          </h4>
+                        String(user._id)
 
-                          <p>
+                      return (
 
-                            {player.country}
+                        <div
 
-                          </p>
+                          key={player._id}
 
-                          <p className='price'>
+                          className={
 
-                            ₹ {
+                            player.sold
 
-                              (
-                                player.price /
+                              ? 'player-card sold-player'
 
-                                10000000
+                              : 'player-card'
+                          }
+                        >
 
-                              ).toFixed(2)
+                          {/* ICON */}
 
-                            } Cr
-
-                          </p>
-
-                        </div>
-
-                        <button
-
-                            disabled={
-
-                            myTeam.find(
-
-                                item => item._id === player._id
-                            )
-                            }
-
-                            onClick={() =>
-                            addPlayer(player)
-                            }
-                            >
+                          <div className='player-icon'>
 
                             {
 
-                            myTeam.find(
+                              getRoleIcon(
+                                player.role
+                              )
+                            }
 
-                                item => item._id === player._id
-                            )
+                          </div>
 
-                                ? 'Selected'
+                          {/* PLAYER INFO */}
+
+                          <div className='player-info'>
+
+                            <Link
+
+                              to={`/player/${player._id}`}
+
+                              className='player-link'
+                            >
+
+                              {player.name}
+
+                            </Link>
+
+                            <p>
+
+                              {player.country}
+
+                            </p>
+
+                            <p className='price'>
+
+                              ₹ {
+
+                                (
+                                  player.price /
+
+                                  10000000
+                                ).toFixed(2)
+
+                              } Cr
+
+                            </p>
+
+                            {/* SOLD TEAM */}
+
+                            {
+
+                              player.sold &&
+
+                              player.soldTeamName &&
+
+                              isSoldToOtherUser && (
+
+                                <div className='sold-info'>
+
+                                  <p className='sold-text'>
+
+                                    SOLD TO
+
+                                  </p>
+
+                                  <p className='sold-team-name'>
+
+                                    {
+
+                                      player.soldTeamName
+                                    }
+
+                                  </p>
+
+                                </div>
+                              )
+                            }
+
+                          </div>
+
+                          {/* BUTTON */}
+
+                          <button
+
+                            disabled={
+
+                              isSoldToOtherUser ||
+
+                              isCurrentUserPlayer
+                            }
+
+                            onClick={() =>
+                              addPlayer(player)
+                            }
+                          >
+
+                            {
+
+                              player.sold
+
+                                ? 'Sold'
 
                                 : 'Add Player'
                             }
 
-                        </button>
+                          </button>
 
-                      </div>
-                    ))
+                        </div>
+                      )
+                    })
                   }
 
                 </div>
@@ -246,7 +329,7 @@ const getRoleIcon = (role) => {
 
         </div>
 
-        {/* RIGHT */}
+        {/* RIGHT SIDE */}
 
         <div className='team-section'>
 
@@ -275,23 +358,39 @@ const getRoleIcon = (role) => {
                   myTeam.map(player => (
 
                     <div
+
                       key={player._id}
+
                       className='team-card'
                     >
 
+                      {/* ICON */}
+
                       <div className='player-icon'>
 
-                        {getRoleIcon(player.role)}
+                        {
+
+                          getRoleIcon(
+                            player.role
+                          )
+                        }
 
                       </div>
 
+                      {/* INFO */}
+
                       <div className='player-info'>
 
-                        <h4>
+                        <Link
+
+                          to={`/player/${player._id}`}
+
+                          className='player-link'
+                        >
 
                           {player.name}
 
-                        </h4>
+                        </Link>
 
                         <p>
 
@@ -307,7 +406,6 @@ const getRoleIcon = (role) => {
                               player.price /
 
                               10000000
-
                             ).toFixed(2)
 
                           } Cr
@@ -316,7 +414,10 @@ const getRoleIcon = (role) => {
 
                       </div>
 
+                      {/* REMOVE */}
+
                       <button
+
                         onClick={() =>
                           removePlayer(player._id)
                         }

@@ -1,5 +1,4 @@
 /* eslint-disable react-refresh/only-export-components */
-
 import {
 
   createContext,
@@ -37,46 +36,51 @@ function PlayerProvider({ children }) {
 
   } = useAuthContext()
 
-  useEffect(() => {
-
-    if (user) {
-
-      loadData()
-    }
-
-  }, [user])
-
   // LOAD DATA
 
-  const loadData = async () => {
+  useEffect(() => {
 
-    try {
+    const loadData = async () => {
 
-      const playerResponse = await API.get(
-        '/players'
-      )
+      if(!user){
 
-      setPlayers(
-        playerResponse.data
-      )
-
-      const teamResponse = await API.get(
-
-        `/team/${user._id}`
-      )
-
-      if (teamResponse.data) {
-
-        setMyTeam(
-          teamResponse.data.players
-        )
+        return
       }
 
-    } catch (error) {
+      try {
 
-      console.log(error)
+        // GET ALL PLAYERS
+
+        const playerResponse = await API.get(
+
+          '/players'
+        )
+
+        setPlayers(
+          playerResponse.data
+        )
+
+        // GET USER TEAM
+
+        const teamResponse = await API.get(
+
+          `/team/${user._id}`
+        )
+
+        setMyTeam(
+
+          teamResponse.data?.players || []
+        )
+
+      } catch(error){
+
+        console.log(error)
+      }
     }
-  }
+
+    loadData()
+
+  }, [user])
 
   // SAVE TEAM
 
@@ -90,15 +94,16 @@ function PlayerProvider({ children }) {
 
         {
 
-          userId: user._id,
+          userId:user._id,
 
-          players: updatedTeam.map(
+          players:updatedTeam.map(
+
             player => player._id
           )
         }
       )
 
-    } catch (error) {
+    } catch(error){
 
       console.log(error)
     }
@@ -108,15 +113,41 @@ function PlayerProvider({ children }) {
 
   const addPlayer = async (player) => {
 
+    // ALREADY EXISTS
+
     const exists = myTeam.find(
 
-      item => item._id === player._id
+      item =>
+
+        item._id === player._id
     )
 
-    if (exists) {
+    if(exists){
 
       toast.error(
-        'Player already added'
+
+        'This player is already in your team.'
+      )
+
+      return
+    }
+
+    // SOLD TO OTHER USER
+
+    if(
+
+      player.sold &&
+
+      String(player.soldTo)
+
+      !==
+
+      String(user._id)
+    ){
+
+      toast.error(
+
+        `${player.name} already sold to ${player.soldTeamName}`
       )
 
       return
@@ -125,77 +156,94 @@ function PlayerProvider({ children }) {
     // ROLE COUNTS
 
     const batterCount = myTeam.filter(
+
       p => p.role === 'Batter'
     ).length
 
     const bowlerCount = myTeam.filter(
+
       p => p.role === 'Bowler'
     ).length
 
     const wicketKeeperCount = myTeam.filter(
+
       p => p.role === 'Wicket Keeper'
     ).length
 
     const allRounderCount = myTeam.filter(
+
       p => p.role === 'All Rounder'
     ).length
 
     // ROLE LIMITS
 
-    if (
+    if(
+
       player.role === 'Batter' &&
+
       batterCount >= 5
-    ) {
+    ){
 
       toast.error(
-        'Only 5 Batters allowed'
+
+        'Maximum 5 Batters allowed.'
       )
 
       return
     }
 
-    if (
+    if(
+
       player.role === 'Bowler' &&
+
       bowlerCount >= 5
-    ) {
+    ){
 
       toast.error(
-        'Only 5 Bowlers allowed'
+
+        'Maximum 5 Bowlers allowed.'
       )
 
       return
     }
 
-    if (
+    if(
+
       player.role === 'Wicket Keeper' &&
+
       wicketKeeperCount >= 2
-    ) {
+    ){
 
       toast.error(
-        'Only 2 Wicket Keepers allowed'
+
+        'Maximum 2 Wicket Keepers allowed.'
       )
 
       return
     }
 
-    if (
+    if(
+
       player.role === 'All Rounder' &&
+
       allRounderCount >= 3
-    ) {
+    ){
 
       toast.error(
-        'Only 3 All Rounders allowed'
+
+        'Maximum 3 All Rounders allowed.'
       )
 
       return
     }
 
-    // TEAM LIMIT
+    // TEAM SIZE
 
-    if (myTeam.length >= 15) {
+    if(myTeam.length >= 15){
 
       toast.error(
-        'Maximum 15 players allowed'
+
+        'Team is full (max 15 players).'
       )
 
       return
@@ -212,24 +260,30 @@ function PlayerProvider({ children }) {
       0
     )
 
-    const totalAfterAdd =
-
-      totalSpent + player.price
-
-    if (
-
-      totalAfterAdd >
+    const remainingBudget =
 
       Number(user.budget)
 
-    ) {
+      -
+
+      totalSpent
+
+    if(
+
+      remainingBudget < player.price
+    ){
 
       toast.error(
-        'Budget exceeded'
+
+        `Insufficient budget to buy ${player.name}
+        (Price: ₹${player.price},
+        Remaining: ₹${remainingBudget})`
       )
 
       return
     }
+
+    // UPDATED TEAM
 
     const updatedTeam = [
 
@@ -240,10 +294,39 @@ function PlayerProvider({ children }) {
 
     setMyTeam(updatedTeam)
 
+    // UPDATE PLAYERS STATE
+
+    const updatedPlayers = players.map(
+
+      item => {
+
+        if(item._id === player._id){
+
+          return {
+
+            ...item,
+
+            sold:true,
+
+            soldTo:user._id,
+
+            soldTeamName:user.teamName
+          }
+        }
+
+        return item
+      }
+    )
+
+    setPlayers(updatedPlayers)
+
+    // SAVE TEAM
+
     await saveTeam(updatedTeam)
 
     toast.success(
-      'Player Added'
+
+      `${player.name} added to your team.`
     )
   }
 
@@ -258,9 +341,38 @@ function PlayerProvider({ children }) {
 
     setMyTeam(updatedTeam)
 
+    // UPDATE PLAYER STATUS
+
+    const updatedPlayers = players.map(
+
+      item => {
+
+        if(item._id === id){
+
+          return {
+
+            ...item,
+
+            sold:false,
+
+            soldTo:null,
+
+            soldTeamName:''
+          }
+        }
+
+        return item
+      }
+    )
+
+    setPlayers(updatedPlayers)
+
+    // SAVE TEAM
+
     await saveTeam(updatedTeam)
 
     toast.success(
+
       'Player Removed'
     )
   }
@@ -268,6 +380,7 @@ function PlayerProvider({ children }) {
   return (
 
     <PlayerContext.Provider
+
       value={{
 
         players,
@@ -294,3 +407,5 @@ export {
   PlayerProvider,
   usePlayerContext
 }
+
+export default PlayerContext

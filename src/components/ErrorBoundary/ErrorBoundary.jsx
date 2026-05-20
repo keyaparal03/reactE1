@@ -1,32 +1,68 @@
-import React from 'react'
+import {
 
-class ErrorBoundary extends React.Component {
+  Component
 
-  constructor(props) {
+} from 'react'
+
+import './ErrorBoundary.css'
+
+class ErrorBoundary extends Component {
+
+  constructor(props){
 
     super(props)
 
     this.state = {
-      hasError: false
+
+      hasError:false
     }
   }
 
-  static getDerivedStateFromError() {
+  static getDerivedStateFromError(){
 
     return {
-      hasError: true
+
+      hasError:true
     }
   }
 
-  render() {
+  componentDidCatch(error){
 
-    if (this.state.hasError) {
+    console.log(error)
+  }
+
+  render(){
+
+    if(this.state.hasError){
 
       return (
 
-        <h1>
-          Something Went Wrong
-        </h1>
+        <div className='error-page'>
+
+          <h1>
+
+            Something Went Wrong
+
+          </h1>
+
+          <p>
+
+            Please refresh the page.
+
+          </p>
+
+          <button
+
+            onClick={() =>
+              window.location.reload()
+            }
+          >
+
+            Reload
+
+          </button>
+
+        </div>
       )
     }
 

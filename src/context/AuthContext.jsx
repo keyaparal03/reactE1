@@ -1,32 +1,84 @@
+/* eslint-disable react-refresh/only-export-components */
+
 import {
+
   createContext,
   useContext,
+  useEffect,
   useState
+
 } from 'react'
 
 const AuthContext = createContext()
 
 function AuthProvider({ children }) {
 
-  const [user, setUser] = useState(null)
+  // LOAD USER FROM SESSION STORAGE
 
-  const loginUser = (userData) => {
+  const [user, setUser] = useState(() => {
+
+    const savedUser = sessionStorage.getItem(
+      'dreamArenaUser'
+    )
+
+    return savedUser
+
+      ? JSON.parse(savedUser)
+
+      : null
+  })
+
+  // SAVE USER TO SESSION STORAGE
+
+  useEffect(() => {
+
+    if (user) {
+
+      sessionStorage.setItem(
+
+        'dreamArenaUser',
+
+        JSON.stringify(user)
+      )
+
+    } else {
+
+      sessionStorage.removeItem(
+
+        'dreamArenaUser'
+      )
+    }
+
+  }, [user])
+
+  // LOGIN
+
+  const login = (userData) => {
 
     setUser(userData)
   }
 
-  const logoutUser = () => {
+  // LOGOUT
+
+  const logout = () => {
 
     setUser(null)
+
+    sessionStorage.removeItem(
+      'dreamArenaUser'
+    )
   }
 
   return (
 
     <AuthContext.Provider
       value={{
+
         user,
-        loginUser,
-        logoutUser
+
+        login,
+
+        logout
       }}
     >
 
@@ -42,6 +94,7 @@ const useAuthContext = () => {
 }
 
 export {
+
   AuthProvider,
   useAuthContext
 }

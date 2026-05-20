@@ -1,4 +1,8 @@
-import { useFormik } from 'formik'
+import {
+
+  useFormik
+
+} from 'formik'
 
 import * as Yup from 'yup'
 
@@ -39,22 +43,23 @@ function Login() {
 
     initialValues: {
 
-      email: '',
-
-      password: ''
+      email:'',
+      password:''
     },
 
-    validationSchema: Yup.object({
+    validationSchema:Yup.object({
 
-      email: Yup.string()
+      email:Yup.string()
 
-        .email('Invalid Email')
+        .required(
+          'Please enter your email.'
+        ),
 
-        .required('Email Required'),
+      password:Yup.string()
 
-      password: Yup.string()
-
-        .required('Password Required')
+        .required(
+          'Please enter your password.'
+        )
     }),
 
     onSubmit: async (values) => {
@@ -79,12 +84,10 @@ function Login() {
         navigate('/dashboard')
 
       } catch (error) {
-
+        console.log(error)
         toast.error(
 
-          error.response?.data?.message ||
-
-          'Invalid Credentials'
+          'Incorrect email or password.'
         )
       }
     }
@@ -97,7 +100,9 @@ function Login() {
       <div className='login-box'>
 
         <h1>
+
           DreamArena Login
+
         </h1>
 
         <form
@@ -118,27 +123,21 @@ function Login() {
             }
           />
 
-          {
+          <p className='error'>
 
-            loginForm.touched.email &&
+            {
 
-            loginForm.errors.email && (
+              loginForm.touched.email &&
 
-              <p className='error'>
+              loginForm.errors.email
+            }
 
-                {
-                  loginForm.errors.email
-                }
-
-              </p>
-            )
-          }
+          </p>
 
           <input
             type='password'
             name='password'
             placeholder='Enter Password'
-            autoComplete='current-password'
             value={
               loginForm.values.password
             }
@@ -147,21 +146,16 @@ function Login() {
             }
           />
 
-          {
+          <p className='error'>
 
-            loginForm.touched.password &&
+            {
 
-            loginForm.errors.password && (
+              loginForm.touched.password &&
 
-              <p className='error'>
+              loginForm.errors.password
+            }
 
-                {
-                  loginForm.errors.password
-                }
-
-              </p>
-            )
-          }
+          </p>
 
           <button type='submit'>
 
@@ -171,20 +165,18 @@ function Login() {
 
         </form>
 
-        <div className='register-link'>
+        <Link
+          to='/register'
+          className='register-link'
+        >
 
-          <Link to='/register'>
+          Create Account
 
-            Create Account
-
-          </Link>
-
-        </div>
+        </Link>
 
       </div>
 
     </div>
   )
 }
-
 export default Login

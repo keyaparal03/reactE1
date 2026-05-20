@@ -1,9 +1,13 @@
 import {
+
   useNavigate
+
 } from 'react-router-dom'
 
 import {
+
   useAuthContext
+
 } from '../../context/AuthContext'
 
 import './Header.css'
@@ -13,8 +17,10 @@ function Header({ remainingBudget }) {
   const navigate = useNavigate()
 
   const {
+
     user,
     logoutUser
+
   } = useAuthContext()
 
   const handleLogout = () => {
@@ -28,31 +34,49 @@ function Header({ remainingBudget }) {
 
     <header className='header'>
 
-      <div className='logo'>
+      <h1 className='logo'>
 
         DreamArena
 
+      </h1>
+
+      <div className='header-center'>
+
+        <h3>
+
+          Welcome,
+
+          <span>
+
+            {user?.fullName}
+
+          </span>
+
+        </h3>
+
+        <div className='budget-box'>
+
+          Available Balance:
+
+          ₹ {
+
+            remainingBudget.toLocaleString()
+          }
+
+        </div>
+
       </div>
 
-      <div className='budget-box'>
+      <button
 
-        Budget Left:
+        className='logout-btn'
 
-        ₹ {(remainingBudget / 10000000).toFixed(2)} Cr
+        onClick={handleLogout}
+      >
 
-      </div>
+        Logout
 
-      <div className='user-section'>
-
-        <span>
-          {user?.teamName}
-        </span>
-
-        <button onClick={handleLogout}>
-          Logout
-        </button>
-
-      </div>
+      </button>
 
     </header>
   )

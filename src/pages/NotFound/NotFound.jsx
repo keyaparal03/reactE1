@@ -12,34 +12,32 @@ function NotFound() {
 
     <div className='notfound-container'>
 
-      <div className='notfound-box'>
+      <h1>
 
-        <h1>
+        404
 
-          404
+      </h1>
 
-        </h1>
+      <h2>
 
-        <h2>
+        Page Not Found
 
-          Page Not Found
+      </h2>
 
-        </h2>
+      <p>
 
-        <p>
+        The page you are looking for does not exist.
 
-          The page you are looking for
-          does not exist.
+      </p>
 
-        </p>
+      <Link
+        to='/'
+        className='home-btn'
+      >
 
-        <Link to='/'>
+        Go To Home
 
-          Go To Home
-
-        </Link>
-
-      </div>
+      </Link>
 
     </div>
   )

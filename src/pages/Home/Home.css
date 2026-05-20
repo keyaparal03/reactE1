@@ -147,10 +147,10 @@ section h2{
     margin-bottom:25px;
     color:#ff1e1e;
 }
-section.Toastify {
+/* section.Toastify {
     display: none;
     padding: 0;
-}
+} */
 p strong {
     padding: 0 10px;
 }

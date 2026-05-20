@@ -19,26 +19,12 @@ import {
 
 } from 'react-toastify'
 
-import {
-
-  useEffect
-
-} from 'react'
 import API from '../../services/api'
 
 import './Register.css'
 
 function Register() {
 
-  useEffect(() => {
-
-    console.log("ttttt")
-  toast.success(
-
-    'Toast Working'
-  )
-
-}, [])
   const navigate = useNavigate()
 
   const registerForm = useFormik({

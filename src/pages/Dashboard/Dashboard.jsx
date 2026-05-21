@@ -19,6 +19,8 @@ import {
 
 import API from '../../services/api'
 
+import Header from '../../components/Header/Header'
+
 import './Dashboard.css'
 
 function Dashboard() {
@@ -36,7 +38,7 @@ function Dashboard() {
     localStorage.getItem('user')
   )
 
-  // LOAD PLAYERS + TEAM
+  // LOAD DATA
 
   useEffect(() => {
 
@@ -103,12 +105,12 @@ function Dashboard() {
 
     // ALREADY EXISTS
 
-    const alreadyBought = myTeam.find(
+    const exists = myTeam.find(
 
       item => item._id === player._id
     )
 
-    if(alreadyBought){
+    if(exists){
 
       return toast.error(
 
@@ -116,7 +118,7 @@ function Dashboard() {
       )
     }
 
-    // MAX LIMIT
+    // TEAM LIMIT
 
     if(myTeam.length >= 15){
 
@@ -126,22 +128,9 @@ function Dashboard() {
       )
     }
 
-    // CURRENT SPENT
+    // BUDGET
 
-    const spent = myTeam.reduce(
-
-      (total, item) => total + item.price,
-
-      0
-    )
-
-    // REMAINING
-
-    const remaining = user.budget - spent
-
-    // CHECK BUDGET
-
-    if(remaining < player.price){
+    if(remainingBudget < player.price){
 
       return toast.error(
 
@@ -150,8 +139,6 @@ function Dashboard() {
     }
 
     try {
-
-      // UPDATED TEAM
 
       const updatedTeam = [
 
@@ -181,14 +168,14 @@ function Dashboard() {
 
       setMyTeam(updatedTeam)
 
+      // REFRESH PLAYERS
+
+      fetchPlayers()
+
       toast.success(
 
         `${player.name} added to team`
       )
-
-      // REFRESH PLAYERS
-
-      fetchPlayers()
 
     } catch(error){
 
@@ -196,7 +183,7 @@ function Dashboard() {
 
       toast.error(
 
-        'Failed to add player'
+        'Failed to buy player'
       )
     }
   }
@@ -211,6 +198,8 @@ function Dashboard() {
 
         player => player._id !== playerId
       )
+
+      // SAVE TEAM
 
       await API.post(
 
@@ -239,22 +228,42 @@ function Dashboard() {
     } catch(error){
 
       console.log(error)
+
+      toast.error(
+
+        'Failed to remove player'
+      )
     }
   }
 
-  // REMAINING BUDGET
+  // TOTAL BUDGET
+
+  const totalBudget = Number(
+
+    user?.budget || 0
+  )
+
+  // SPENT
 
   const spentAmount = myTeam.reduce(
 
-    (total, player) => total + player.price,
+    (total, player) => {
+
+      return total + Number(
+
+        player.price || 0
+      )
+
+    },
 
     0
   )
 
-  const remainingBudget = (
+  // REMAINING
 
-    user.budget - spentAmount
-  )
+  const remainingBudget =
+
+    totalBudget - spentAmount
 
   // GROUP PLAYERS
 
@@ -272,12 +281,16 @@ function Dashboard() {
 
     'Wicket Keeper': players.filter(
 
-      player => player.role === 'Wicket Keeper'
+      player =>
+
+      player.role === 'Wicket Keeper'
     ),
 
     'All Rounder': players.filter(
 
-      player => player.role === 'All Rounder'
+      player =>
+
+      player.role === 'All Rounder'
     )
   }
 
@@ -288,50 +301,212 @@ function Dashboard() {
 
   return (
 
-    <div className='dashboard-container'>
+    <>
 
-      {/* LEFT */}
+      {/* HEADER */}
 
-      <div className='available-section'>
+      <Header
 
-        <h1 className='section-title'>
+        remainingBudget={remainingBudget}
+      />
 
-          Available Players
+      {/* DASHBOARD */}
 
-        </h1>
+      <div className='dashboard-container'>
 
-        {
+        {/* LEFT */}
 
-          Object.entries(
+        <div className='available-section'>
 
-            groupedPlayers
+          <h1 className='section-title'>
 
-          ).map(([role, rolePlayers]) => (
+            Available Players
 
-            <div key={role}>
+          </h1>
 
-              <h2 className='role-title'>
+          {
 
-                {role}
+            Object.entries(
 
-              </h2>
+              groupedPlayers
 
-              <div className='player-grid'>
+            ).map(([role, rolePlayers]) => (
+
+              <div key={role}>
+
+                <h2 className='role-title'>
+
+                  {role}
+
+                </h2>
+
+                <div className='player-grid'>
+
+                  {
+
+                    rolePlayers.map(player => (
+
+                      <div
+
+                        key={player._id}
+
+                        className={`player-card ${
+                          player.sold
+                          ? 'sold-player'
+                          : ''
+                        }`}
+                      >
+
+                        {/* IMAGE */}
+
+                        <img
+
+                          src={player.image}
+
+                          alt={player.name}
+
+                          className='player-image'
+
+                          onError={(e) => {
+
+                            e.target.src =
+                            'https://cdn-icons-png.flaticon.com/512/147/147144.png'
+                          }}
+                        />
+
+                        {/* INFO */}
+
+                        <div className='player-info'>
+
+                          <Link
+
+                            to={`/player/${player._id}`}
+
+                            className='player-link'
+                          >
+
+                            {player.name}
+
+                          </Link>
+
+                          <p className='player-country'>
+
+                            {player.country}
+
+                          </p>
+
+                          <p className='player-type'>
+
+                            {player.playerType}
+
+                          </p>
+
+                          <div className='player-meta'>
+
+                            <span className='rating'>
+
+                              {player.overallRating}
+
+                            </span>
+
+                            <span className='category'>
+
+                              {player.category}
+
+                            </span>
+
+                          </div>
+
+                          <h3 className='price'>
+
+                            ₹ {
+
+                              (
+                                player.price /
+
+                                10000000
+                              ).toFixed(2)
+
+                            } Cr
+
+                          </h3>
+
+                          {
+
+                            player.sold ? (
+
+                              <button disabled>
+
+                                Sold
+
+                              </button>
+
+                            ) : (
+
+                              <button
+
+                                onClick={() =>
+
+                                  buyPlayer(player)
+                                }
+                              >
+
+                                Buy Player
+
+                              </button>
+                            )
+                          }
+
+                        </div>
+
+                      </div>
+                    ))
+                  }
+
+                </div>
+
+              </div>
+            ))
+          }
+
+        </div>
+
+        {/* RIGHT */}
+
+        <div className='team-section'>
+
+          <h1 className='section-title'>
+
+            My Team ({myTeam.length}/15)
+
+          </h1>
+
+          {
+
+            myTeam.length === 0 ? (
+
+              <p className='empty-team'>
+
+                No Players Added
+
+              </p>
+
+            ) : (
+
+              <div className='team-grid'>
 
                 {
 
-                  rolePlayers.map(player => (
+                  myTeam.map(player => (
 
                     <div
 
                       key={player._id}
 
-                      className={`player-card ${
-                        player.sold
-                        ? 'sold-player'
-                        : ''
-                      }`}
+                      className='team-card'
                     >
+
+                      {/* IMAGE */}
 
                       <img
 
@@ -340,50 +515,31 @@ function Dashboard() {
                         alt={player.name}
 
                         className='player-image'
+
+                        onError={(e) => {
+
+                          e.target.src =
+                          'https://cdn-icons-png.flaticon.com/512/147/147144.png'
+                        }}
                       />
+
+                      {/* INFO */}
 
                       <div className='player-info'>
 
-                        <Link
-
-                          to={`/player/${player._id}`}
-
-                          className='player-link'
-                        >
+                        <h4>
 
                           {player.name}
 
-                        </Link>
+                        </h4>
 
-                        <p className='player-country'>
+                        <p>
 
-                          {player.country}
-
-                        </p>
-
-                        <p className='player-type'>
-
-                          {player.playerType}
+                          {player.role}
 
                         </p>
 
-                        <div className='player-meta'>
-
-                          <span className='rating'>
-
-                            {player.overallRating}
-
-                          </span>
-
-                          <span className='category'>
-
-                            {player.category}
-
-                          </span>
-
-                        </div>
-
-                        <h3 className='price'>
+                        <p className='price'>
 
                           ₹ {
 
@@ -395,183 +551,39 @@ function Dashboard() {
 
                           } Cr
 
-                        </h3>
-
-                        {
-
-                          player.sold ? (
-
-                            <button disabled>
-
-                              Sold
-                            </button>
-
-                          ) : (
-
-                            <button
-
-                              onClick={() =>
-
-                                buyPlayer(player)
-                              }
-                            >
-
-                              Buy Player
-
-                            </button>
-                          )
-                        }
+                        </p>
 
                       </div>
+
+                      {/* REMOVE */}
+
+                      <button
+
+                        onClick={() =>
+
+                          removePlayer(
+                            player._id
+                          )
+                        }
+                      >
+
+                        Remove
+
+                      </button>
 
                     </div>
                   ))
                 }
 
               </div>
+            )
+          }
 
-            </div>
-          ))
-        }
-
-      </div>
-
-      {/* RIGHT */}
-
-      <div className='team-section'>
-
-        <h1 className='section-title'>
-
-          My Team ({myTeam.length}/15)
-
-        </h1>
-
-        <h3>
-
-          Welcome,
-
-          {' '}
-
-          {user.fullName}
-
-        </h3>
-
-        <h3>
-
-          Team:
-
-          {' '}
-
-          {user.teamName}
-
-        </h3>
-
-        <h2>
-
-          Available Balance:
-
-          {' '}
-
-          ₹ {
-
-            (
-              remainingBudget /
-
-              10000000
-            ).toFixed(2)
-
-          } Cr
-
-        </h2>
-
-        {
-
-          myTeam.length === 0 ? (
-
-            <p className='empty-team'>
-
-              No Players Added
-            </p>
-
-          ) : (
-
-            <div className='team-grid'>
-
-              {
-
-                myTeam.map(player => (
-
-                  <div
-
-                    key={player._id}
-
-                    className='team-card'
-                  >
-
-                    <img
-
-                      src={player.image}
-
-                      alt={player.name}
-
-                      className='player-image'
-                    />
-
-                    <div className='player-info'>
-
-                      <h4>
-
-                        {player.name}
-
-                      </h4>
-
-                      <p>
-
-                        {player.role}
-
-                      </p>
-
-                      <p className='price'>
-
-                        ₹ {
-
-                          (
-                            player.price /
-
-                            10000000
-                          ).toFixed(2)
-
-                        } Cr
-
-                      </p>
-
-                    </div>
-
-                    <button
-
-                      onClick={() =>
-
-                        removePlayer(
-                          player._id
-                        )
-                      }
-                    >
-
-                      Remove
-
-                    </button>
-
-                  </div>
-                ))
-              }
-
-            </div>
-          )
-        }
+        </div>
 
       </div>
 
-    </div>
+    </>
   )
 }
 

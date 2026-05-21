@@ -4,35 +4,35 @@ import {
 
 } from 'react-router-dom'
 
-import {
-
-  useAuthContext
-
-} from '../../context/AuthContext'
-
 import './Header.css'
 
-function Header({ remainingBudget }) {
+function Header({
+
+  remainingBudget
+
+}) {
 
   const navigate = useNavigate()
 
-  const {
+  const user = JSON.parse(
 
-    user,
-    logoutUser
+    localStorage.getItem('user')
+  )
 
-  } = useAuthContext()
+  // LOGOUT
 
-  const handleLogout = () => {
+  const logoutHandler = () => {
 
-    logoutUser()
+    localStorage.removeItem('user')
 
-    navigate('/')
+    navigate('/login')
   }
 
   return (
 
-    <header className='header'>
+    <header className='main-header'>
+
+      {/* LEFT */}
 
       <h1 className='logo'>
 
@@ -40,43 +40,60 @@ function Header({ remainingBudget }) {
 
       </h1>
 
+      {/* CENTER */}
+
       <div className='header-center'>
 
-        <h3>
+        <h3 className='welcome-text'>
 
           Welcome,
 
-          <span>
+          {' '}
 
-            {user?.fullName}
-
-          </span>
-
+          {user?.fullName}
         </h3>
 
         <div className='budget-box'>
 
           Available Balance:
 
+          {' '}
+
           ₹ {
 
-            remainingBudget.toLocaleString()
-          }
+            (
+              remainingBudget /
+
+              10000000
+            ).toFixed(2)
+
+          } Cr
 
         </div>
 
       </div>
 
-      <button
+      {/* RIGHT */}
 
-        className='logout-btn'
+      <div className='header-right'>
 
-        onClick={handleLogout}
-      >
+        <h3 className='team-name'>
 
-        Logout
+          {user?.teamName}
+        </h3>
 
-      </button>
+        <button
+
+          className='logout-btn'
+
+          onClick={logoutHandler}
+        >
+
+          Logout
+
+        </button>
+
+      </div>
 
     </header>
   )

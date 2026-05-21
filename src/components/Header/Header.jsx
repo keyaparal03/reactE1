@@ -25,7 +25,7 @@ function Header({
 
     localStorage.removeItem('user')
 
-    navigate('/login')
+    navigate('/')
   }
 
   return (

@@ -1,25 +1,32 @@
 import {
 
-    Navigate
+  Navigate
 
 } from 'react-router-dom'
 
 function PublicRoute({
 
-    children
+  children
+
 }) {
 
-    const token = localStorage.getItem(
+  // CHECK USER
 
-    'token'
-    )
+  const user = localStorage.getItem(
 
-    if(token){
+    'user'
+  )
+
+  // IF LOGGED IN
+
+  if(user){
 
     return <Navigate to='/dashboard' />
-    }
+  }
 
-    return children
+  // OTHERWISE
+
+  return children
 }
 
 export default PublicRoute

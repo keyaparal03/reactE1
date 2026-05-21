@@ -342,7 +342,7 @@ return (
 
       <div className='login-link'>
 
-        <Link to='/'>
+        <Link to='/login'>
 
           Already Have Account?
 

@@ -3,8 +3,16 @@
     display:flex;
     justify-content:center;
     align-items:center;
-    background:#f3f4f6;
+    /* background:#f3f4f6; */
     padding:30px;
+    background:
+    linear-gradient(
+        rgba(0,0,0,0.7),
+    rgba(0,0,0,0.7)
+    ),
+    url('https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?q=80&w=2070');
+    background-size:cover;
+    background-position:center;
 }
 .register-box{
     width:450px;

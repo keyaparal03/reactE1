@@ -1,74 +1,138 @@
 import {
 
+  useEffect,
+  useState
+
+} from 'react'
+
+import {
+
   useParams,
-  useNavigate
+  Link
 
 } from 'react-router-dom'
 
-import {
-
-  usePlayerContext
-
-} from '../../context/PlayerContext'
+import API from '../../services/api'
 
 import Header from '../../components/Header/Header'
-
-import {
-
-  useAuthContext
-
-} from '../../context/AuthContext'
 
 import './PlayerDetails.css'
 
 function PlayerDetails() {
 
-  const { id } = useParams()
-
-  const navigate = useNavigate()
-
   const {
 
-    players
+    id
 
-  } = usePlayerContext()
+  } = useParams()
 
-  const {
+  const [player, setPlayer] = useState(null)
 
-    user
+  const [loading, setLoading] = useState(true)
 
-  } = useAuthContext()
+  // USER
 
-  const player = players.find(
+  const user = JSON.parse(
 
-    item => item._id === id
+    localStorage.getItem('user')
   )
 
-  const totalSpent = 0
+  // FETCH PLAYER
 
-  const remainingBudget =
+  useEffect(() => {
 
-    Number(user?.budget || 0) -
+    fetchPlayer()
 
-    totalSpent
+  }, [id])
 
-  if (!player) {
+  const fetchPlayer = async () => {
+
+    try {
+
+      const response = await API.get(
+
+        `/players/${id}`
+      )
+
+      setPlayer(
+
+        response.data
+      )
+
+    } catch(error){
+
+      console.log(error)
+    }
+
+    setLoading(false)
+  }
+
+  // LOADING
+
+  if(loading){
 
     return (
 
       <>
-
+      
         <Header
+
           remainingBudget={
-            remainingBudget
+            user?.budget || 0
           }
         />
 
-        <div className='player-details-container'>
+        <div className='player-details-page'>
 
           <h1>
-            Player Not Found
+
+            Loading...
+
           </h1>
+
+        </div>
+
+      </>
+    )
+  }
+
+  // PLAYER NOT FOUND
+
+  if(!player){
+
+    return (
+
+      <>
+      
+        <Header
+
+          remainingBudget={
+            user?.budget || 0
+          }
+        />
+
+        <div className='player-details-page'>
+
+          <div className='player-details-card'>
+
+            <h1>
+
+              Player Not Found
+
+            </h1>
+
+            <Link
+              
+              to='/dashboard'
+
+              className='back-btn'
+            >
+
+              Back To Dashboard
+
+            </Link>
+
+          </div>
 
         </div>
 
@@ -79,55 +143,110 @@ function PlayerDetails() {
   return (
 
     <>
-
+    
       <Header
+
         remainingBudget={
-          remainingBudget
+          user?.budget || 0
         }
       />
 
-      <div className='player-details-container'>
+      <div className='player-details-page'>
 
         <div className='player-details-card'>
 
+          {/* IMAGE */}
+
           <img
+
             src={player.image}
+
             alt={player.name}
+
+            className='details-image'
+
+            onError={(e) => {
+
+              e.target.src =
+              'https://cdn-icons-png.flaticon.com/512/147/147144.png'
+            }}
           />
 
-          <div className='player-content'>
+          {/* NAME */}
 
-            <h1>
+          <h1>
 
-              {player.name}
+            {player.name}
 
-            </h1>
+          </h1>
 
-            <p>
+          {/* DETAILS */}
 
-              <strong>
-                Role:
-              </strong>
+          <p>
+
+            Role:
+
+            <span>
 
               {player.role}
 
-            </p>
+            </span>
 
-            <p>
+          </p>
 
-              <strong>
-                Country:
-              </strong>
+          <p>
+
+            Player Type:
+
+            <span>
+
+              {player.playerType}
+
+            </span>
+
+          </p>
+
+          <p>
+
+            Country:
+
+            <span>
 
               {player.country}
 
-            </p>
+            </span>
 
-            <p>
+          </p>
 
-              <strong>
-                Price:
-              </strong>
+          <p>
+
+            Category:
+
+            <span>
+
+              {player.category}
+
+            </span>
+
+          </p>
+
+          <p>
+
+            Rating:
+
+            <span>
+
+              {player.overallRating}
+
+            </span>
+
+          </p>
+
+          <p>
+
+            Price:
+
+            <span>
 
               ₹ {
 
@@ -135,24 +254,26 @@ function PlayerDetails() {
                   player.price /
 
                   10000000
-
                 ).toFixed(2)
 
               } Cr
 
-            </p>
+            </span>
 
-            <button
-              onClick={() =>
-                navigate(-1)
-              }
-            >
+          </p>
 
-              Go Back
+          {/* BUTTON */}
 
-            </button>
+          <Link
+            
+            to='/dashboard'
 
-          </div>
+            className='back-btn'
+          >
+
+            Back To Dashboard
+
+          </Link>
 
         </div>
 

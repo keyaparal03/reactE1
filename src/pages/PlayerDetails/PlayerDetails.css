@@ -10,7 +10,7 @@
 
   align-items:center;
 
-  padding-top:100px;
+  padding:120px 20px 40px;
 }
 
 .player-details-card{
@@ -21,31 +21,25 @@
 
   padding:35px;
 
-  border-radius:18px;
+  border-radius:20px;
 
   box-shadow:
-  0 4px 15px rgba(0,0,0,0.1);
+  0 4px 18px rgba(0,0,0,0.12);
 
   text-align:center;
 }
 
-.details-icon{
+.details-image{
 
-  height:140px;
+  width:180px;
 
-  display:flex;
+  height:180px;
 
-  justify-content:center;
+  object-fit:cover;
 
-  align-items:center;
+  border-radius:50%;
 
-  background:#07122b;
-
-  color:white;
-
-  font-size:70px;
-
-  border-radius:16px;
+  border:5px solid #ef2323;
 
   margin-bottom:20px;
 }
@@ -55,22 +49,34 @@
   margin-bottom:20px;
 
   color:#07122b;
+
+  font-size:38px;
+
+  font-weight:800;
 }
 
 .player-details-card p{
 
-  margin:12px 0;
+  margin:14px 0;
 
   font-size:18px;
 
   color:#374151;
+
+  display:flex;
+
+  justify-content:space-between;
+
+  align-items:center;
+
+  border-bottom:1px solid #e5e7eb;
+
+  padding-bottom:10px;
 }
 
 .player-details-card span{
 
   font-weight:700;
-
-  margin-left:8px;
 
   color:#111827;
 }
@@ -81,7 +87,7 @@
 
   margin-top:25px;
 
-  padding:12px 22px;
+  padding:14px 24px;
 
   background:#ef2323;
 
@@ -89,9 +95,11 @@
 
   text-decoration:none;
 
-  border-radius:10px;
+  border-radius:12px;
 
   font-weight:700;
+
+  transition:0.3s;
 }
 
 .back-btn:hover{

@@ -11,6 +11,12 @@ import {
 
 } from 'react-toastify'
 
+import {
+
+  Link
+
+} from 'react-router-dom'
+
 import API from '../../services/api'
 
 import Header from '../../components/Header/Header'
@@ -425,14 +431,14 @@ function Dashboard() {
 
                     rolePlayers.map(player => {
 
-                      const alreadyAdded =
+                      // const alreadyAdded =
 
-                        myTeam.find(
+                      //   myTeam.find(
 
-                          item =>
+                      //     item =>
 
-                          item._id === player._id
-                        )
+                      //     item._id === player._id
+                      //   )
 
                       return (
 
@@ -447,7 +453,18 @@ function Dashboard() {
 
                           <img
 
-                            src={player.image}
+                            src={
+
+                              player.image
+
+                              ?
+
+                              player.image
+
+                              :
+
+                              'https://cdn-icons-png.flaticon.com/512/147/147144.png'
+                            }
 
                             alt={player.name}
 
@@ -465,8 +482,15 @@ function Dashboard() {
                           <div className='player-info'>
 
                             <h4>
+                              <Link
 
-                              {player.name}
+                                to={`/player/${player._id}`}
+
+                                className='player-link'
+                              >
+
+                                {player.name}
+                              </Link>
 
                             </h4>
 
@@ -617,7 +641,18 @@ function Dashboard() {
 
                       <img
 
-                        src={player.image}
+                        src={
+
+                          player.image
+
+                          ?
+
+                          player.image
+
+                          :
+
+                          'https://cdn-icons-png.flaticon.com/512/147/147144.png'
+                        }
 
                         alt={player.name}
 
@@ -636,7 +671,15 @@ function Dashboard() {
 
                         <h4>
 
-                          {player.name}
+                          <Link
+
+                            to={`/player/${player._id}`}
+
+                            className='player-link'
+                          >
+
+                            {player.name}
+                          </Link>
 
                         </h4>
 

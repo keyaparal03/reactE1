@@ -10,7 +10,19 @@
 
   align-items:center;
 
-  padding:120px 20px 40px;
+  padding:25px 20px 40px;
+}
+/* RATING */
+
+.player-rating{
+
+  font-size:16px;
+
+  font-weight:800;
+
+  color:#f59e0b;
+
+  margin-bottom:8px;
 }
 
 .player-details-card{

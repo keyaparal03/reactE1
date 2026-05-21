@@ -234,9 +234,13 @@ function PlayerDetails() {
 
             Rating:
 
-            <span>
+            <span className='player-rating'>
 
-              {player.overallRating}
+              ⭐ {
+
+                player.overallRating
+              }
+
 
             </span>
 

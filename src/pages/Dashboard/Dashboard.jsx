@@ -520,35 +520,50 @@ function Dashboard() {
                               } Cr
 
                             </h3>
+                            {
+
+                            player.sold &&
+
+                            <p className='sold-team-name'>
+
+                              Sold To:
+
+                              {' '}
+
+                              {player.soldTeamName}
+
+                            </p>
+                          }
 
                           </div>
 
                           {/* BUTTON */}
 
-                          <button
+                           <button
 
-                            disabled={alreadyAdded}
+                          disabled={player.sold}
 
-                            onClick={() =>
+                          onClick={() =>
 
-                              buyPlayer(player)
-                            }
-                          >
+                            buyPlayer(player)
+                          }
+                        >
 
-                            {
+                          {
 
-                              alreadyAdded
+                            player.sold
 
-                              ?
+                            ?
 
-                              'Sold'
+                            'Sold'
 
-                              :
+                            :
 
-                              'Buy Player'
-                            }
+                            'Buy Player'
+                          }
 
-                          </button>
+                        </button>
+
 
                         </div>
                       )
@@ -669,6 +684,20 @@ function Dashboard() {
                           } Cr
 
                         </h3>
+                        {
+
+                            player.sold &&
+
+                            <p className='sold-team-name'>
+
+                              Sold To:
+
+                              {' '}
+
+                              {player.soldTeamName}
+
+                            </p>
+                          }
 
                       </div>
 

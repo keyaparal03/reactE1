@@ -20,49 +20,102 @@ const navigate = useNavigate()
       budget: ''
     },
 
-    validationSchema: Yup.object({
+   validationSchema: Yup.object({
 
-      fullName: Yup.string()
+  fullName: Yup.string()
 
-        .min(3, 'Minimum 3 characters')
+    .min(
 
-        .required('Full Name Required'),
+      3,
 
-      email: Yup.string()
+      'Please enter your full name (min 3 characters).'
+    )
 
-        .email('Invalid Email')
+    .required(
 
-        .required('Email Required'),
+      'Please enter your full name.'
+    ),
 
-      password: Yup.string()
+  email: Yup.string()
 
-        .min(8, 'Minimum 8 characters')
+    .email(
 
-        .required('Password Required'),
+      'Please enter a valid email address.'
+    )
 
-      confirmPassword: Yup.string()
+    .required(
 
-        .oneOf(
-          [Yup.ref('password')],
-          'Passwords must match'
-        )
+      'Please enter your email.'
+    ),
 
-        .required(
-          'Confirm Password Required'
-        ),
+  password: Yup.string()
 
-      teamName: Yup.string()
+    .matches(
 
-        .required('Team Name Required'),
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/,
 
-      budget: Yup.number()
+      'Password must be at least 8 characters and include upper, lower, and a number.'
+    )
 
-        .required('Budget Required')
+    .required(
 
-        .typeError(
-          'Budget must be a number'
-        )
-    }),
+      'Please enter your password.'
+    ),
+
+  confirmPassword: Yup.string()
+
+    .oneOf(
+
+      [Yup.ref('password')],
+
+      'Passwords do not match.'
+    )
+
+    .required(
+
+      'Please confirm your password.'
+    ),
+
+  teamName: Yup.string()
+
+    .min(
+
+      2,
+
+      'Please enter a team name (min 2 characters).'
+    )
+
+    .required(
+
+      'Please enter your team name.'
+    ),
+
+  budget: Yup.number()
+
+    .required(
+
+      'Please set your starting budget.'
+    )
+
+    .min(
+
+      100000,
+
+      'Budget must be between ₹1,00,000 and ₹10,00,00,000.'
+    )
+
+    .max(
+
+      1000000000,
+
+      'Budget must be between ₹1,00,000 and ₹10,00,00,000.'
+    )
+
+    .typeError(
+
+      'Please enter a valid budget.'
+    )
+}),
 
     onSubmit: async (values) => {
 
@@ -79,7 +132,7 @@ const navigate = useNavigate()
           'Registration Successful'
         )
 
-        navigate('/')
+        navigate('/login')
 
       } catch (error) {
 

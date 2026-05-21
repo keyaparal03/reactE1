@@ -40,32 +40,32 @@ function PlayerDetails() {
   // FETCH PLAYER
 
   useEffect(() => {
+     const fetchPlayer = async () => {
 
+      try {
+
+        const response = await API.get(
+
+          `/players/${id}`
+        )
+
+        setPlayer(
+
+          response.data
+        )
+
+      } catch(error){
+
+        console.log(error)
+      }
+
+      setLoading(false)
+    }
     fetchPlayer()
 
   }, [id])
 
-  const fetchPlayer = async () => {
-
-    try {
-
-      const response = await API.get(
-
-        `/players/${id}`
-      )
-
-      setPlayer(
-
-        response.data
-      )
-
-    } catch(error){
-
-      console.log(error)
-    }
-
-    setLoading(false)
-  }
+ 
 
   // LOADING
 

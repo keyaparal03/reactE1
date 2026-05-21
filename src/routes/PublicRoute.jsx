@@ -1,25 +1,25 @@
 import {
 
-  Navigate
+    Navigate
 
 } from 'react-router-dom'
 
 function PublicRoute({
 
-  children
+    children
 }) {
 
-  const token = localStorage.getItem(
+    const token = localStorage.getItem(
 
     'token'
-  )
+    )
 
-  if(token){
+    if(token){
 
     return <Navigate to='/dashboard' />
-  }
+    }
 
-  return children
+    return children
 }
 
 export default PublicRoute

@@ -154,9 +154,7 @@ section h2{
 p strong {
     padding: 0 10px;
 }
-.footer {
-  margin-top: 0;
-}
+
 /* RESPONSIVE */
 
 @media(max-width:768px){

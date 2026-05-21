@@ -7,12 +7,6 @@ import {
 
 import {
 
-  Link
-
-} from 'react-router-dom'
-
-import {
-
   toast
 
 } from 'react-toastify'
@@ -41,7 +35,57 @@ function Dashboard() {
   // LOAD DATA
 
   useEffect(() => {
+    const fetchPlayers = async () => {
 
+      try {
+
+        const response = await API.get(
+
+          '/players'
+        )
+
+        setPlayers(
+
+          response.data
+        )
+
+      } catch(error){
+
+        console.log(error)
+
+        toast.error(
+
+          'Failed to load players'
+        )
+      }
+    }
+
+    // FETCH TEAM
+
+    const fetchMyTeam = async () => {
+
+      try {
+
+        const response = await API.get(
+
+          `/team/${user._id}`
+        )
+
+        if(response.data){
+
+          setMyTeam(
+
+            response.data.players || []
+          )
+        }
+
+      } catch(error){
+
+        console.log(error)
+      }
+
+      setLoading(false)
+    }
     fetchPlayers()
 
     fetchMyTeam()
@@ -50,54 +94,36 @@ function Dashboard() {
 
   // FETCH PLAYERS
 
-  const fetchPlayers = async () => {
 
-    try {
 
-      const response = await API.get(
+  // TOTAL BUDGET
 
-        '/players'
+  const totalBudget = Number(
+
+    user?.budget || 0
+  )
+
+  // SPENT
+
+  const spentAmount = myTeam.reduce(
+
+    (total, player) => {
+
+      return total + Number(
+
+        player.price || 0
       )
 
-      setPlayers(response.data)
+    },
 
-    } catch(error){
+    0
+  )
 
-      console.log(error)
+  // REMAINING
 
-      toast.error(
+  const remainingBudget =
 
-        'Failed to load players'
-      )
-    }
-  }
-
-  // FETCH TEAM
-
-  const fetchMyTeam = async () => {
-
-    try {
-
-      const response = await API.get(
-
-        `/team/${user._id}`
-      )
-
-      if(response.data){
-
-        setMyTeam(
-
-          response.data.players || []
-        )
-      }
-
-    } catch(error){
-
-      console.log(error)
-    }
-
-    setLoading(false)
-  }
+    totalBudget - spentAmount
 
   // BUY PLAYER
 
@@ -124,17 +150,103 @@ function Dashboard() {
 
       return toast.error(
 
-        'Team is full (max 15 players).'
+        'Maximum 15 players allowed.'
       )
     }
 
-    // BUDGET
+    // ROLE COUNTS
+
+    const batters = myTeam.filter(
+
+      item => item.role === 'Batter'
+    )
+
+    const bowlers = myTeam.filter(
+
+      item => item.role === 'Bowler'
+    )
+
+    const wicketKeepers = myTeam.filter(
+
+      item =>
+
+      item.role === 'Wicket Keeper'
+    )
+
+    const allRounders = myTeam.filter(
+
+      item =>
+
+      item.role === 'All Rounder'
+    )
+
+    // BATTER LIMIT
+
+    if(
+
+      player.role === 'Batter' &&
+
+      batters.length >= 5
+    ){
+
+      return toast.error(
+
+        'Maximum 5 Batters allowed.'
+      )
+    }
+
+    // BOWLER LIMIT
+
+    if(
+
+      player.role === 'Bowler' &&
+
+      bowlers.length >= 5
+    ){
+
+      return toast.error(
+
+        'Maximum 5 Bowlers allowed.'
+      )
+    }
+
+    // WK LIMIT
+
+    if(
+
+      player.role === 'Wicket Keeper' &&
+
+      wicketKeepers.length >= 2
+    ){
+
+      return toast.error(
+
+        'Maximum 2 Wicket Keepers allowed.'
+      )
+    }
+
+    // AR LIMIT
+
+    if(
+
+      player.role === 'All Rounder' &&
+
+      allRounders.length >= 3
+    ){
+
+      return toast.error(
+
+        'Maximum 3 All Rounders allowed.'
+      )
+    }
+
+    // BUDGET CHECK
 
     if(remainingBudget < player.price){
 
       return toast.error(
 
-        `Insufficient budget to buy ${player.name}`
+        `Insufficient budget for ${player.name}`
       )
     }
 
@@ -167,10 +279,6 @@ function Dashboard() {
       // UPDATE UI
 
       setMyTeam(updatedTeam)
-
-      // REFRESH PLAYERS
-
-      fetchPlayers()
 
       toast.success(
 
@@ -218,8 +326,6 @@ function Dashboard() {
 
       setMyTeam(updatedTeam)
 
-      fetchPlayers()
-
       toast.success(
 
         'Player removed'
@@ -235,35 +341,6 @@ function Dashboard() {
       )
     }
   }
-
-  // TOTAL BUDGET
-
-  const totalBudget = Number(
-
-    user?.budget || 0
-  )
-
-  // SPENT
-
-  const spentAmount = myTeam.reduce(
-
-    (total, player) => {
-
-      return total + Number(
-
-        player.price || 0
-      )
-
-    },
-
-    0
-  )
-
-  // REMAINING
-
-  const remainingBudget =
-
-    totalBudget - spentAmount
 
   // GROUP PLAYERS
 
@@ -307,7 +384,9 @@ function Dashboard() {
 
       <Header
 
-        remainingBudget={remainingBudget}
+        remainingBudget={
+          remainingBudget
+        }
       />
 
       {/* DASHBOARD */}
@@ -344,123 +423,136 @@ function Dashboard() {
 
                   {
 
-                    rolePlayers.map(player => (
+                    rolePlayers.map(player => {
 
-                      <div
+                      const alreadyAdded =
 
-                        key={player._id}
+                        myTeam.find(
 
-                        className={`player-card ${
-                          player.sold
-                          ? 'sold-player'
-                          : ''
-                        }`}
-                      >
+                          item =>
 
-                        {/* IMAGE */}
+                          item._id === player._id
+                        )
 
-                        <img
+                      return (
 
-                          src={player.image}
+                        <div
 
-                          alt={player.name}
+                          key={player._id}
 
-                          className='player-image'
+                          className='player-card'
+                        >
 
-                          onError={(e) => {
+                          {/* IMAGE */}
 
-                            e.target.src =
-                            'https://cdn-icons-png.flaticon.com/512/147/147144.png'
-                          }}
-                        />
+                          <img
 
-                        {/* INFO */}
+                            src={player.image}
 
-                        <div className='player-info'>
+                            alt={player.name}
 
-                          <Link
+                            className='player-image'
 
-                            to={`/player/${player._id}`}
+                            onError={(e) => {
 
-                            className='player-link'
-                          >
+                              e.target.src =
+                              'https://cdn-icons-png.flaticon.com/512/147/147144.png'
+                            }}
+                          />
 
-                            {player.name}
+                          {/* INFO */}
 
-                          </Link>
+                          <div className='player-info'>
 
-                          <p className='player-country'>
+                            <h4>
 
-                            {player.country}
+                              {player.name}
 
-                          </p>
+                            </h4>
 
-                          <p className='player-type'>
+                            <p>
 
-                            {player.playerType}
+                              {player.country}
 
-                          </p>
+                            </p>
 
-                          <div className='player-meta'>
+                            {/* TAGS */}
 
-                            <span className='rating'>
+                            <div className='player-tags'>
 
-                              {player.overallRating}
+                              <span className='player-role-badge'>
 
-                            </span>
+                                {player.playerType}
 
-                            <span className='category'>
+                              </span>
 
-                              {player.category}
+                              <span className='player-category-badge'>
 
-                            </span>
+                                {player.category}
+
+                              </span>
+
+                            </div>
+
+                            {/* RATING */}
+
+                            <div className='player-rating'>
+
+                              ⭐ {
+
+                                player.overallRating
+                              }
+
+                            </div>
+
+                            {/* PRICE */}
+
+                            <h3 className='price'>
+
+                              ₹ {
+
+                                (
+                                  player.price /
+
+                                  10000000
+                                ).toFixed(2)
+
+                              } Cr
+
+                            </h3>
 
                           </div>
 
-                          <h3 className='price'>
+                          {/* BUTTON */}
 
-                            ₹ {
+                          <button
 
-                              (
-                                player.price /
+                            disabled={alreadyAdded}
 
-                                10000000
-                              ).toFixed(2)
+                            onClick={() =>
 
-                            } Cr
+                              buyPlayer(player)
+                            }
+                          >
 
-                          </h3>
+                            {
 
-                          {
+                              alreadyAdded
 
-                            player.sold ? (
+                              ?
 
-                              <button disabled>
+                              'Sold'
 
-                                Sold
+                              :
 
-                              </button>
+                              'Buy Player'
+                            }
 
-                            ) : (
-
-                              <button
-
-                                onClick={() =>
-
-                                  buyPlayer(player)
-                                }
-                              >
-
-                                Buy Player
-
-                              </button>
-                            )
-                          }
+                          </button>
 
                         </div>
-
-                      </div>
-                    ))
+                      )
+                    })
                   }
 
                 </div>
@@ -535,11 +627,36 @@ function Dashboard() {
 
                         <p>
 
-                          {player.role}
+                          {player.country}
 
                         </p>
 
-                        <p className='price'>
+                        <div className='player-tags'>
+
+                          <span className='player-role-badge'>
+
+                            {player.playerType}
+
+                          </span>
+
+                          <span className='player-category-badge'>
+
+                            {player.category}
+
+                          </span>
+
+                        </div>
+
+                        <div className='player-rating'>
+
+                          ⭐ {
+
+                            player.overallRating
+                          }
+
+                        </div>
+
+                        <h3 className='price'>
 
                           ₹ {
 
@@ -551,7 +668,7 @@ function Dashboard() {
 
                           } Cr
 
-                        </p>
+                        </h3>
 
                       </div>
 

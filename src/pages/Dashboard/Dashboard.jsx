@@ -90,7 +90,7 @@ function Dashboard() {
 
     fetchMyTeam()
 
-  }, [])
+  }, [user])
 
   // FETCH PLAYERS
 

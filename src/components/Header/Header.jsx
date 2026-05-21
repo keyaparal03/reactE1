@@ -1,5 +1,6 @@
 import {
 
+  Link,
   useNavigate
 
 } from 'react-router-dom'
@@ -36,7 +37,7 @@ function Header({
 
       <h1 className='logo'>
 
-        DreamArena
+        <Link to={`/dashboard`}>DreamArena</Link>
 
       </h1>
 

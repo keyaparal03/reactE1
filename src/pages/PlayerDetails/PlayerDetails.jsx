@@ -159,11 +159,22 @@ function PlayerDetails() {
 
           <img
 
-            src={player.image}
+            src={
+
+              player.image
+
+              ?
+
+              player.image
+
+              :
+
+              'https://cdn-icons-png.flaticon.com/512/147/147144.png'
+            }
 
             alt={player.name}
 
-            className='details-image'
+            className='player-image'
 
             onError={(e) => {
 
@@ -229,6 +240,46 @@ function PlayerDetails() {
             </span>
 
           </p>
+          <p>
+
+            Status:
+
+            <span
+              className={
+                player.sold
+                  ? 'sold-status'
+                  : 'available-status'
+              }
+            >
+
+              {
+                player.sold
+                  ? 'Sold'
+                  : 'Available'
+              }
+
+            </span>
+
+          </p>
+
+          {
+            player.sold && (
+
+              <p>
+
+                Sold To:
+
+                <span><strong>
+
+                  {
+                    player.soldTeamName || 'Team Not Assigned'
+                  }
+                </strong>
+                </span>
+
+              </p>
+            )
+          }
 
           <p>
 

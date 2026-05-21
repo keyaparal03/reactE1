@@ -28,7 +28,7 @@ function Home() {
                             to='/register'
                             className='register-btn'
                             >
-                                Register Team
+                                Register
                             </Link>
                         </div>
                     </nav>

@@ -118,3 +118,17 @@
 
   background:#d91c1c;
 }
+.player-details-card span.sold-status{
+
+  color: red;
+
+  font-weight: 700;
+}
+
+.player-details-card span.available-status{
+
+  color: green;
+
+  font-weight: 700;
+}
+
